@@ -13,7 +13,7 @@ public class MainDAO {
 	private final String user = "memo";
 	private final String password = "codehows213";
 	
-	private Connection conn;
+	public Connection conn;
 	private PreparedStatement pstmt;
 	private ResultSet rs;
 	private String sql;
