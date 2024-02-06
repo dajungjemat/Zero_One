@@ -13,10 +13,10 @@ public class MainDAO {
 	private final String user = "memo";
 	private final String password = "codehows213";
 	
-	private Connection conn;
-	private PreparedStatement pstmt;
-	private ResultSet rs;
-	private String sql;
+	public Connection conn;
+	public PreparedStatement pstmt;
+	public ResultSet rs;
+	public String sql;
 	
 	public static MainDAO getInstance() {
 		return instance;

@@ -18,13 +18,22 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 
+import model.BoardsDAO;
+import model.BoardsDTO;
+
 public class PostDialog extends JDialog {
 	private JPanel pContent, pTitle,pSouth;
     private JTextField titleField;
     private JTextArea contentArea;
-    private JButton saveButton;
+    private JButton saveButton,updateButton,deleteButton;
+    private String email;
+    private int boardNo;
+    private BoardApp boardApp;
 
-    public PostDialog(BoardApp boardApp) {
+    public PostDialog(BoardApp boardApp, String email, int boardNo) {
+    	this.email = email;
+    	this.boardNo = boardNo;
+    	this.boardApp = boardApp;
     	this.setTitle("게시물 작성");
     	this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     	this.setResizable(false);
@@ -56,7 +65,7 @@ public class PostDialog extends JDialog {
     		titleField.setHorizontalAlignment(JTextField.CENTER);
     		titleField.setBorder(new LineBorder(Color.BLACK, 3));
             pTitle.add(titleField);
-    	//hinttext 추가하면 좋을듯(placeholder 기능) - 메소드 쌩으로 만들어야됨
+            
     	}
     	return pTitle;
     }
@@ -79,8 +88,12 @@ public class PostDialog extends JDialog {
         if (pSouth == null) {
             pSouth = new JPanel(null);  
             pSouth.setPreferredSize(new Dimension(800,100));
-            getSaveButton().setBounds(300, 25, 200, 50);
+            getSaveButton().setBounds(300, 25, 150, 50);
             pSouth.add(getSaveButton());
+//            getUpdateButton().setBounds(150, 25, 150, 50);
+//            pSouth.add(getUpdateButton());
+//            getUpdateButton().setBounds(310, 25, 150, 50);
+//            pSouth.add(getDeleteButton());
         }
         return pSouth;
     }
@@ -98,19 +111,65 @@ public class PostDialog extends JDialog {
             saveButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    
-                   //눌렀을때 저장 + 저장됐다 메세지 or 실패 메세지 추가 
-                  
+                    BoardsDTO board = new BoardsDTO();
+                    board.setTitle(titleField.getText());
+                    board.setBoardContent(contentArea.getText());
+                    board.setEmail(email);            
+                    BoardsDAO.getInstance().insertBoards(board);
+                    boardApp.refreshBoard();
                     dispose();
                 }
             });
         }
         return saveButton;
     }
-
     
+//    private JButton getUpdateButton() {
+//    	 if (updateButton == null) {
+//    		 updateButton = new JButton();
+//    		 updateButton.setText("수정");
+//             Font myFont1 = new Font("Serif", Font.BOLD, 15);
+//             updateButton.setFont(myFont1);
+//             updateButton.setForeground(Color.WHITE);
+//             updateButton.setBackground(Color.BLACK);
+//             
+//             updateButton.addActionListener(new ActionListener() {
+//				@Override
+//				public void actionPerformed(ActionEvent e) {
+//					BoardsDTO board = new BoardsDTO();
+//					 board.setTitle(titleField.getText());
+//	                 board.setBoardContent(contentArea.getText());
+//	                 BoardsDAO.getInstance().updateBoards(board,boardNo);
+//					 dispose();
+//					
+//				}           	 
+//             });
+//             
+//    	    }
+//    	 return updateButton;
+//    }  
+//    private JButton getDeleteButton() {
+//   	 if (deleteButton == null) {
+//   		 deleteButton = new JButton();
+//   		 deleteButton.setText("삭제");
+//            Font myFont1 = new Font("Serif", Font.BOLD, 15);
+//            deleteButton.setFont(myFont1);
+//            deleteButton.setForeground(Color.WHITE);
+//            deleteButton.setBackground(Color.BLACK);
+//            
+//            deleteButton.addActionListener(new ActionListener() {
+//				@Override
+//				public void actionPerformed(ActionEvent e) {
+//					
+//	                 BoardsDAO.getInstance().deleteBoards(boardNo); //
+//					 dispose();
+//					
+//				}           	 
+//            });
+//            
+//   	    }
+//   	 return updateButton;
+//   }  
     
-	
- 
-}  	
+}
     		
