@@ -11,6 +11,7 @@ import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -38,7 +39,9 @@ public class CalendarPage extends JFrame{
 	private JPanel boardTabPane;
 	private JLabel boardLabel;
 	private JTable boardTable;
-	
+	// 로그인 창에서 받아오 정보
+	private String email = "dumi1";
+	private Date date = null;
 	public Calendar calendar = Calendar.getInstance();
 	
 	public CalendarPage (){
@@ -68,7 +71,7 @@ public class CalendarPage extends JFrame{
 	
 	private JLabel getUserNameInTopBar() {
 		if(userNameInTopBar==null) {
-			userNameInTopBar = new JLabel();
+			userNameInTopBar = new JLabel(email);
 		}
 		return userNameInTopBar;
 	}
@@ -188,7 +191,9 @@ public class CalendarPage extends JFrame{
 	                	System.out.println(calendar.get(Calendar.YEAR));
 	                	System.out.println(calendar.get(Calendar.MONTH)+1);
 	                	System.out.println(calendar.get(Calendar.DAY_OF_MONTH));
-	                	TodoPage tp = new TodoPage();
+	                	date = new Date(calendar.getTimeInMillis());
+	                	System.out.println(date);
+	                	TodoPage tp = new TodoPage(date ,email);
 	                	tp.setVisible(true);
 	                }
 	            });
