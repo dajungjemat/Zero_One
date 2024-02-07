@@ -5,16 +5,19 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -43,6 +46,8 @@ public class CalendarPage extends JFrame{
 	private String email = "dumi1";
 	private Date date = null;
 	public Calendar calendar = Calendar.getInstance();
+	private Color beigeCol = new Color(243, 232, 214);
+	private Color beigeColOp = new Color(255, 249, 239);
 	
 	public CalendarPage (){
 		setTitle("타이틀 이름");
@@ -81,6 +86,7 @@ public class CalendarPage extends JFrame{
 	private JTabbedPane getTabPane() {
 		if(tabPane==null) {
 			tabPane = new JTabbedPane();
+			tabPane.setBackground(beigeCol);
 			tabPane.setTabPlacement(JTabbedPane.TOP);
 			tabPane.addTab("calendar", getCalendarTabPane());
 			tabPane.addTab("board", getBoardTabPane());
@@ -89,11 +95,14 @@ public class CalendarPage extends JFrame{
 		return tabPane;
 	}
 	
+	
+	
 	private JPanel getCalendarTabPane() {
 		try {
 				if(calendarTabPane==null) {
 				calendarTabPane =new JPanel();
-				calendarTabPane.setLayout(new BorderLayout());
+				calendarTabPane.setBackground(Color.white);
+				calendarTabPane.setLayout(new BorderLayout(10,20));
 				calendarTabPane.add(getMonthYearBtnPane(),BorderLayout.NORTH);
 				calendarTabPane.add(getCalendarPane(), BorderLayout.CENTER);
 			}	
@@ -105,7 +114,7 @@ public class CalendarPage extends JFrame{
 	private JPanel getMonthYearBtnPane() {
 		if(monthYearBtnPane==null) {
 			monthYearBtnPane = new JPanel();
-			monthYearBtnPane.setBackground(Color.white);
+			monthYearBtnPane.setBackground(beigeCol);
 			monthYearBtnPane.setLayout(new FlowLayout());
 			updateMonthYear();	
 		}else {
@@ -119,6 +128,7 @@ public class CalendarPage extends JFrame{
 	private void updateMonthYear() {
 		
 		preMonthBtn = new JButton("<");
+		preMonthBtn.setBackground(beigeCol);
 		preMonthBtn.addActionListener(new ActionListener() {
 			
 			@Override
@@ -130,6 +140,7 @@ public class CalendarPage extends JFrame{
 			}
 		} );
 		nextMonthBtn = new JButton(">");
+		nextMonthBtn.setBackground(beigeCol);
 		nextMonthBtn.addActionListener(new ActionListener() {
 			
 			@Override
@@ -139,9 +150,11 @@ public class CalendarPage extends JFrame{
 				getCalendarPane();
 			}
 		});
-		
+
 		monthYearLabel = new JLabel();
+		monthYearLabel.setOpaque(true);
 		monthYearLabel.setPreferredSize(new Dimension(500, 100));
+		monthYearLabel.setBackground(beigeCol);
 		SimpleDateFormat sdf = new SimpleDateFormat("MM.YYYY");
 		monthYearLabel.setText(sdf.format(calendar.getTime()));
 		monthYearLabel.setFont(new Font("한컴 윤고딕 250", Font.BOLD, 30));
@@ -183,6 +196,7 @@ public class CalendarPage extends JFrame{
 
 	        for (int day = 1; day <= daysInMonth; day++) {
 	            JButton dayButton = new JButton(String.valueOf(day));
+	            dayButton.setBackground(beigeColOp);
 	            int finalDay = day;
 	            dayButton.addActionListener(new ActionListener() {
 	                @Override
