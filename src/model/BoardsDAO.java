@@ -31,18 +31,18 @@ public class BoardsDAO extends MainDAO{
 			int rows = pstmt.executeUpdate();
 			
 			if (rows == 1) { 
-				JOptionPane.showMessageDialog(null, "게시글 등록","확인",JOptionPane.PLAIN_MESSAGE);		
+				JOptionPane.showMessageDialog(null, "게시글 등록에 성공했습니다.","확인",JOptionPane.PLAIN_MESSAGE);		
 			}else {
-				JOptionPane.showMessageDialog(null, "게시글 등록 실패","확인",JOptionPane.WARNING_MESSAGE);		
+				JOptionPane.showMessageDialog(null, "게시글 등록에 실패했습니다.","확인",JOptionPane.WARNING_MESSAGE);		
 			}
 			close();
 		}catch(Exception e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "게시글 등록 오류","확인",JOptionPane.WARNING_MESSAGE);		
+			JOptionPane.showMessageDialog(null, "게시글 등록에 오류가 생겼습니다.","확인",JOptionPane.WARNING_MESSAGE);		
 		}
 	
-		//PostDialog - saveButton
-	}
+		
+	}//게시글 저장 쿼리 -postDialog
 
 	
 	public void updateBoards(BoardsDTO boards, int boardNo) {
@@ -61,16 +61,16 @@ public class BoardsDAO extends MainDAO{
 			
 			int rows = pstmt.executeUpdate();
 			if(rows == 1) {
-				JOptionPane.showMessageDialog(null, "수정 ㅇ","확인",JOptionPane.PLAIN_MESSAGE);		
+				JOptionPane.showMessageDialog(null, "게시글이 수정되었습니다.","확인",JOptionPane.PLAIN_MESSAGE);		
 			}else {
-				JOptionPane.showMessageDialog(null, "수정 x","확인",JOptionPane.WARNING_MESSAGE);		
+				JOptionPane.showMessageDialog(null, "게시글 수정에 실패했습니다.","확인",JOptionPane.WARNING_MESSAGE);		
 			}
 			close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "수정 오류","확인",JOptionPane.WARNING_MESSAGE);				
-		}		
+			JOptionPane.showMessageDialog(null, "게시글 수정에 오류가 생겼습니다.","확인",JOptionPane.WARNING_MESSAGE);				
+		}		//게시글 수정 쿼리 
 	}
 	
 	public List<BoardsDTO> getBoards() {
@@ -101,7 +101,7 @@ public class BoardsDAO extends MainDAO{
 			e.printStackTrace();
 		}
 		return boardsList;
-	}
+	}//게시글 호출 쿼리 
 	
 	public BoardsDTO getBoardsByBoardNo(int boardNo) {
 		connect();
@@ -116,18 +116,22 @@ public class BoardsDAO extends MainDAO{
 			if(rs.next()) {
 				board.setTitle(rs.getString("title"));
 				board.setBoardContent(rs.getString("boardContent"));
-			}//email
+				board.setEmail(rs.getString("email"));
+				board.setHitcount(rs.getInt("hitcount"));
+				board.setBoardNo(rs.getInt("boardNo"));
+				board.setBoardDate(rs.getDate("boardDate"));
+			}
 			close();
 		} catch (Exception e) {
 			
 			e.printStackTrace();
 		}
 		return board;
-	}//commentDialog에서 클릭했을때 getBoardsByBoardNo + setBoards 메소드 둘다
+	}
 	
 	
 	
-	public void deleteBoards(int boardNo) {//?
+	public void deleteBoards(int boardNo) {
 		connect();
 		sql = "delete from boards where boardNo=?";		
 		
@@ -137,15 +141,15 @@ public class BoardsDAO extends MainDAO{
 			
 			int rows = pstmt.executeUpdate();
 			if(rows == 1) {
-				JOptionPane.showMessageDialog(null, "삭제 ㅇ","확인",JOptionPane.PLAIN_MESSAGE);
+				JOptionPane.showMessageDialog(null, "게시글이 삭제됐습니다.","확인",JOptionPane.PLAIN_MESSAGE);
 			}else {
-				JOptionPane.showMessageDialog(null, "삭제 x","확인",JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, "게시글 삭제에 실패했습니다.","확인",JOptionPane.WARNING_MESSAGE);
 			}
 			close();
 		}catch(Exception e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "삭제 오류","확인",JOptionPane.WARNING_MESSAGE);
-		}
+		}//게시글 삭제 
 		
 	}
 	
@@ -167,12 +171,6 @@ public class BoardsDAO extends MainDAO{
 			e.printStackTrace();
 		}
 		
-	}
+	}//조회수 증가 
 
 }
-
-//insertBoard(게시글 등록)
-//getBoard(게시판 들어갔을때 뜨는 화면)
-//수정, 삭제 updateBoard, deleteBoard
-//addHitcount 조회수 
-

@@ -29,29 +29,28 @@ public class CommentsDAO extends MainDAO{
 			
 			int rows = pstmt.executeUpdate();
 			if(rows == 1) {
-				JOptionPane.showMessageDialog(null, "댓글 등록","확인",JOptionPane.PLAIN_MESSAGE);
+				JOptionPane.showMessageDialog(null, "댓글 등록에 성공했습니다.","확인",JOptionPane.PLAIN_MESSAGE);
 			}else {
-				JOptionPane.showMessageDialog(null, "댓글 등록 실패","확인",JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, "댓글 등록에 실패했습니다.","확인",JOptionPane.WARNING_MESSAGE);
 			}
 			
 		}catch(Exception e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "댓글 등록 오류","확인",JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "댓글 등록에 오류가 생겼습니다.","확인",JOptionPane.WARNING_MESSAGE);
 		}
 		
 		
 	}
 	
-	public List<CommentsDTO> getComments() {
+	public List<CommentsDTO> getComments(int boardNo) {
 		connect();
-		String sql = "select * from comments order by commentNo ";
-		List<CommentsDTO> commentList = new ArrayList<>();
-		
-	
-		
+		String sql = "select * from comments where boardno =? order by commentNo";
+		List<CommentsDTO> commentList = new ArrayList<>();		
 		try {
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, boardNo);
 			rs = pstmt.executeQuery();
+		
 			while(rs.next()) {
 				CommentsDTO comment = new CommentsDTO();
 				comment.setCommentNo(rs.getInt(1));
@@ -64,18 +63,24 @@ public class CommentsDAO extends MainDAO{
 			close();
 		}catch(Exception e) {
 			e.printStackTrace();
-			/*
-			 * JOptionPane.showMessageDialog(null, "오류","확인",JOptionPane.WARNING_MESSAGE);
-			 */
+			
 		}
 		
 		return commentList;
+	}	
+	
+	public void deleteComment(int boardNo) {
+		connect();
+		sql = "delete from comments where boardNo=?";	
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, boardNo);
+			pstmt.executeUpdate();
+			close();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
-	//댓글 삭제, 수정 메소드 
-	
-	
 }
-//insertCommetn 댓글 등록
-//getCommentByCommentNo 댓글 뜨는 화면
-//deleteComment 댓글 삭제 

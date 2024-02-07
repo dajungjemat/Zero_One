@@ -5,10 +5,17 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -25,7 +32,7 @@ public class PostDialog extends JDialog {
 	private JPanel pContent, pTitle,pSouth;
     private JTextField titleField;
     private JTextArea contentArea;
-    private JButton saveButton,updateButton,deleteButton;
+    private RoundedButton saveButton,updateButton,deleteButton;
     private String email;
     private int boardNo;
     private BoardApp boardApp;
@@ -47,7 +54,7 @@ public class PostDialog extends JDialog {
     	
     	 
     	this.getContentPane().add(getPTitle(),BorderLayout.NORTH);
-    	this.getContentPane().add(getPContent(),BorderLayout.CENTER);
+    	this.getContentPane().add(new JScrollPane(getPContent()),BorderLayout.CENTER);
     	this.getContentPane().add(getPSouth(),BorderLayout.SOUTH);
     }
        
@@ -58,56 +65,54 @@ public class PostDialog extends JDialog {
     		pTitle.setLayout(new BorderLayout());
     		pTitle.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
     		pTitle.setPreferredSize(new Dimension(0,70));
+    		pTitle.setBackground(Color.WHITE);
     		//setPreferredSize(new Dimension) null 아니라도 사용가능
     	
     		titleField = new JTextField();
     		titleField.setText("Title");
     		titleField.setHorizontalAlignment(JTextField.CENTER);
-    		titleField.setBorder(new LineBorder(Color.BLACK, 3));
+    		
+    		titleField.setBorder(new LineBorder(new Color(243, 232, 214), 3));
             pTitle.add(titleField);
             
     	}
     	return pTitle;
-    }
+    }//제목 
     
 	  public JPanel getPContent() {
 	        if (pContent == null) {
 	            pContent = new JPanel();
 	            pContent.setLayout(new BorderLayout()); 
 	            pContent.setBorder(BorderFactory.createEmptyBorder(10, 10, 10,10));
+	            pContent.setBackground(Color.WHITE);
 	            JScrollPane js = new JScrollPane(); 
 	            pContent.add(js);
 	            contentArea = new JTextArea();  
-	            contentArea.setBorder(new LineBorder(Color.BLACK, 5));        
+	            contentArea.setBorder(new LineBorder(new Color(243, 232, 214), 5));
+	            contentArea.setLineWrap(true);
 	            pContent.add(contentArea, BorderLayout.CENTER);
 	        } //JScrollpane
 	        return pContent;
-	    }
+	    }//게시글 내용 작성란
      
     private JPanel getPSouth() {
         if (pSouth == null) {
             pSouth = new JPanel(null);  
             pSouth.setPreferredSize(new Dimension(800,100));
-            getSaveButton().setBounds(300, 25, 150, 50);
+            getSaveButton().setBounds(310, 25, 150, 50);
+            pSouth.setBackground(Color.WHITE);
             pSouth.add(getSaveButton());
-//            getUpdateButton().setBounds(150, 25, 150, 50);
-//            pSouth.add(getUpdateButton());
-//            getUpdateButton().setBounds(310, 25, 150, 50);
-//            pSouth.add(getDeleteButton());
+
         }
         return pSouth;
-    }
+    }// 저장버튼 있는 패널 
 
-    private JButton getSaveButton() {
+    private RoundedButton getSaveButton() {
         if (saveButton == null) {
-            saveButton = new JButton();
+            saveButton = new RoundedButton();
             saveButton.setText("저장");
-            Font myFont1 = new Font("Serif", Font.BOLD, 15);
-            saveButton.setFont(myFont1);
-            saveButton.setForeground(Color.WHITE);
-            saveButton.setBackground(Color.BLACK);
-
-            // ActionListener 추가
+           
+          
             saveButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -123,53 +128,63 @@ public class PostDialog extends JDialog {
         }
         return saveButton;
     }
+    class RoundedButton extends JButton {
+		public RoundedButton() {
+			super();
+			decorate();
+		}
+
+		public RoundedButton(String text) {
+			super(text);
+			decorate();
+		}
+
+		public RoundedButton(Action action) {
+			super(action);
+			decorate();
+		}
+
+		public RoundedButton(Icon icon) {
+			super(icon);
+			decorate();
+		}
+
+		public RoundedButton(String text, Icon icon) {
+			super(text, icon);
+			decorate();
+		}
+
+		protected void decorate() {
+			setBorderPainted(false);
+			setOpaque(false);
+		}
+
+		@Override
+		protected void paintComponent(Graphics g) {
+			Color c = new Color(243, 232, 214); // 배경색 결정
+			Color o = new Color(165, 165, 165); // 글자색 결정
+			int width = getWidth();
+			int height = getHeight();
+			Graphics2D graphics = (Graphics2D) g;
+			graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			if (getModel().isArmed()) {
+				graphics.setColor(c.darker());
+			} else if (getModel().isRollover()) {
+				graphics.setColor(c.brighter());
+			} else {
+				graphics.setColor(c);
+			}
+			graphics.fillRoundRect(0, 0, width, height, 10, 10);
+			FontMetrics fontMetrics = graphics.getFontMetrics();
+			Rectangle stringBounds = fontMetrics.getStringBounds(this.getText(), graphics).getBounds();
+			int textX = (width - stringBounds.width) / 2;
+			int textY = (height - stringBounds.height) / 2 + fontMetrics.getAscent();
+			graphics.setColor(o);
+			graphics.setFont(getFont());
+			graphics.drawString(getText(), textX, textY);
+			graphics.dispose();
+			super.paintComponent(g);
+		}
+	}
     
-//    private JButton getUpdateButton() {
-//    	 if (updateButton == null) {
-//    		 updateButton = new JButton();
-//    		 updateButton.setText("수정");
-//             Font myFont1 = new Font("Serif", Font.BOLD, 15);
-//             updateButton.setFont(myFont1);
-//             updateButton.setForeground(Color.WHITE);
-//             updateButton.setBackground(Color.BLACK);
-//             
-//             updateButton.addActionListener(new ActionListener() {
-//				@Override
-//				public void actionPerformed(ActionEvent e) {
-//					BoardsDTO board = new BoardsDTO();
-//					 board.setTitle(titleField.getText());
-//	                 board.setBoardContent(contentArea.getText());
-//	                 BoardsDAO.getInstance().updateBoards(board,boardNo);
-//					 dispose();
-//					
-//				}           	 
-//             });
-//             
-//    	    }
-//    	 return updateButton;
-//    }  
-//    private JButton getDeleteButton() {
-//   	 if (deleteButton == null) {
-//   		 deleteButton = new JButton();
-//   		 deleteButton.setText("삭제");
-//            Font myFont1 = new Font("Serif", Font.BOLD, 15);
-//            deleteButton.setFont(myFont1);
-//            deleteButton.setForeground(Color.WHITE);
-//            deleteButton.setBackground(Color.BLACK);
-//            
-//            deleteButton.addActionListener(new ActionListener() {
-//				@Override
-//				public void actionPerformed(ActionEvent e) {
-//					
-//	                 BoardsDAO.getInstance().deleteBoards(boardNo); //
-//					 dispose();
-//					
-//				}           	 
-//            });
-//            
-//   	    }
-//   	 return updateButton;
-//   }  
-    
-}
-    		
+} 
