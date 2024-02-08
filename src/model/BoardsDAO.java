@@ -49,7 +49,7 @@ public class BoardsDAO extends MainDAO{
 		connect();
 		sql = """
 				update boards 
-				set title=?, boardContent =?
+				set title=?, boardContent =?,boardDate=now()
 				where boardNo = ?
 				""" ;
 		
