@@ -29,6 +29,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -43,6 +44,7 @@ import javax.swing.table.TableColumnModel;
 
 import model.BoardsDAO;
 import model.BoardsDTO;
+import model.UserDAO;
 
 public class CalendarPage extends JFrame{
 	// 공통 변수
@@ -324,6 +326,12 @@ public class CalendarPage extends JFrame{
 			RoundedButton button = new RoundedButton();
 			button.setText("추가");
 			button.setBounds(1850, 150, 100, 40);
+			button.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					new PostDialog(CalendarPage.this.board, email).setVisible(true);
+				}
+			});
 			panel.add(button);
 			JLabel label = new JLabel();
 			label.setIcon(new ImageIcon(getClass().getResource("picture.png")));
