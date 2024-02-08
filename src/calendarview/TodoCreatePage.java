@@ -61,6 +61,8 @@ public class TodoCreatePage extends JFrame{
 		setTitle("일정 생성");
 		setSize(700,300);
 		locationCenter();
+		setDefaultCloseOperation(TEXT_CURSOR);
+
 		setLayout(new GridLayout(4,0));
 		
 		JPanel marginPane = new JPanel(){
@@ -293,25 +295,39 @@ public class TodoCreatePage extends JFrame{
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if(contentInputBox.getText().toString().equals("")||
-							contentInputBox.getText().toString().equals("할 일을 입력하세요")) {
+
+					//날짜 설정 에러
+					if(startDate.getDate() > endDate.getDate()) {
 						JOptionPane.showMessageDialog(
 								TodoCreatePage.this,
-								"할 일을 입력하세요",
-								"Empty contents error",
+								"마감기한이 시작일 이전입니다."
+								+ "날짜를 수정해 주세요",
+								"Date Setting error",
 								JOptionPane.INFORMATION_MESSAGE
 								);
 					}else {
-						ContentsDTO dto = new ContentsDTO();
-						dto.setContent(contentInputBox.getText());
-						dto.setStartDate(startDate);
-						dto.setEndDate(endDate);
-						dto.setEmail(email);
-						
-						ContentsDAO.getInstance().contentsDtoInsert(dto);
-						todoPage.refreshContentPane();
-						setVisible(false);
+						//내용 없을 때 에러
+						if(contentInputBox.getText().toString().equals("")||
+								contentInputBox.getText().toString().equals("할 일을 입력하세요")) {
+							JOptionPane.showMessageDialog(
+									TodoCreatePage.this,
+									"할 일을 입력하세요",
+									"Empty contents error",
+									JOptionPane.INFORMATION_MESSAGE
+									);
+						}else {
+							ContentsDTO dto = new ContentsDTO();
+							dto.setContent(contentInputBox.getText());
+							dto.setStartDate(startDate);
+							dto.setEndDate(endDate);
+							dto.setEmail(email);
+							
+							ContentsDAO.getInstance().contentsDtoInsert(dto);
+							todoPage.refreshContentPane();
+							setVisible(false);
+						}						
 					}
+					
 				}
 			});
 			

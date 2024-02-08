@@ -10,6 +10,8 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -61,7 +64,11 @@ public class TodoPage extends JFrame{
 	ImageIcon createBtnImage = new ImageIcon(TodoPage.class.getResource("createBtn.png"));
 	ImageIcon deleteBtnImage = new ImageIcon(TodoPage.class.getResource("deleteBtn.png"));
 	ImageIcon topBackBarImage = new ImageIcon(TodoPage.class.getResource("topBackBar.png"));
-
+	ImageIcon saveBtnImage = new ImageIcon(TodoPage.class.getResource("saveBtn.png"));
+	ImageIcon topBackImage = new ImageIcon(TodoPage.class.getResource("topBack.png"));
+	ImageIcon memoTopImage = new ImageIcon(TodoPage.class.getResource("memoTopImage.png"));
+	ImageIcon diaryTopImage = new ImageIcon(TodoPage.class.getResource("diaryTopImage.png"));
+	ImageIcon todoTopImage = new ImageIcon(TodoPage.class.getResource("todoTopImage.png"));
 	
 	public TodoPage(Date date,String email) {
 		this.todoPage = this;
@@ -69,6 +76,8 @@ public class TodoPage extends JFrame{
 		this.email = email;
 		setSize(800,1000);
 		locationCenter();
+		setDefaultCloseOperation(TEXT_CURSOR);
+
 		getContentPane().add(getTabPane());	
 	}
 	
@@ -101,7 +110,15 @@ public class TodoPage extends JFrame{
 	                setOpaque(false); 
 	                super.paintComponent(g);
 	            }
-	    };
+			};
+			
+			JPanel centerPane = new JPanel(){
+	            public void paintComponent(Graphics g) {
+	                g.drawImage(todoTopImage.getImage(), 0, 0, null);
+	                setOpaque(false); 
+	                super.paintComponent(g);
+	            }
+			};
 			
 			JButton createContentBtn = new JButton(createBtnImage);
 			createContentBtn.setBackground(Color.white);
@@ -116,6 +133,7 @@ public class TodoPage extends JFrame{
 				}
 			});
 			
+			timerButtonPane.add(centerPane, BorderLayout.CENTER);
 			timerButtonPane.add(marginPane, BorderLayout.NORTH);
 			timerButtonPane.add(createContentBtn, BorderLayout.EAST);
 			
@@ -134,11 +152,11 @@ public class TodoPage extends JFrame{
 			
 			JScrollPane willScroll = new JScrollPane(getWillPane());
 			willScroll.setPreferredSize(new Dimension(700, 300));
-			willScroll.setBorder(new LineBorder(beigeCol, 5, true));
+			willScroll.setBorder(new LineBorder(beigeCol, 20, true));
 			willScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			JScrollPane didScroll = new JScrollPane(getDidPane());
 			didScroll.setPreferredSize(new Dimension(700, 300));
-			didScroll.setBorder(new LineBorder(beigeCol, 5, true));
+			didScroll.setBorder(new LineBorder(beigeCol, 20, true));
 			didScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
 			
@@ -196,6 +214,7 @@ public class TodoPage extends JFrame{
 		contentPane.setBackground(Color.white);
 		contentPane.setPreferredSize(new Dimension(600, 30));
 		contentPane.setLayout(new BorderLayout());
+		
 		JCheckBox checkBox = new JCheckBox();
 		checkBox.setBackground(Color.white);
 		checkBox.addActionListener(new ActionListener() {
@@ -217,9 +236,13 @@ public class TodoPage extends JFrame{
 				}				
 			}
 		});
+		
 		contentPane.add(checkBox, BorderLayout.WEST);
 		contentPane.add(new JLabel(dto.getContent()), BorderLayout.CENTER);
-		contentPane.add(new JLabel(dto.getTimer()), BorderLayout.EAST);
+		if(dto.getFinishdate()==null) {
+			contentPane.add(new JLabel(dto.getEndDate().toString()), BorderLayout.EAST);
+		}else contentPane.add(new JLabel(dto.getFinishdate().toString()), BorderLayout.EAST);
+		
 	
 		return contentPane;
 	}
@@ -235,7 +258,7 @@ public class TodoPage extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				for(int i=0; i<checkList.size();i++) {
 					if(checkList.get(i).getFinishdate()==null) {
-						ContentsDAO.getInstance().contentFinish(checkList.get(i));
+						ContentsDAO.getInstance().contentFinish(checkList.get(i),date);
 					}
 				}
 				checkList.removeAll(checkList);
@@ -312,17 +335,40 @@ public class TodoPage extends JFrame{
 		if(memoPane==null) {
 			memoPane = new JPanel();
 			memoPane.setSize(800,1000);
+			memoPane.setBackground(Color.white);
 			
 			JPanel memoTopBar = new JPanel();
+			memoTopBar.setPreferredSize(new Dimension(700, 100));
+			memoTopBar.setBackground(Color.white);
 	         memoTopBar.setLayout(new BorderLayout());
+	         
+	 		JPanel marginPane = new JPanel(){
+	            public void paintComponent(Graphics g) {
+	                g.drawImage(topBackBarImage.getImage(), 0, 0, null);
+	                setOpaque(false); 
+	                super.paintComponent(g);
+	            }
+	 		};
+	 		
+			JPanel centerPane = new JPanel(){
+	            public void paintComponent(Graphics g) {
+	                g.drawImage(memoTopImage.getImage(), 0, 0, null);
+	                setOpaque(false); 
+	                super.paintComponent(g);
+	            }
+			};
+			
+			
+	 		memoTopBar.add(marginPane, BorderLayout.NORTH);
+	 		memoTopBar.add(centerPane, BorderLayout.CENTER);
+	 		
 	         JLabel memodate = new JLabel(date.toString());
 	         Font font = new Font("굴림 보통", Font.BOLD, 15);
 	         memodate.setFont(font);
 	         memodate.setAlignmentX(JLabel.CENTER);
 	         memodate.setVerticalAlignment(JLabel.BOTTOM);
 	         memodate.setHorizontalAlignment(JLabel.RIGHT);
-	         memoTopBar.add(memodate);
-	         memoTopBar.setPreferredSize(new Dimension(600,100));
+	         memoTopBar.add(memodate, BorderLayout.EAST);
 			
 			memoBox = new JTextArea();
 			MemoDTO memoDto = MemoDAO.getInstance().getMemo(date, email);
@@ -332,10 +378,15 @@ public class TodoPage extends JFrame{
 			}
 	
 			JScrollPane memoScroll = new JScrollPane(memoBox);
-			memoScroll.setPreferredSize(new Dimension(600, 400));	
+			memoScroll.setPreferredSize(new Dimension(700, 600));
+			memoScroll.setBorder(new LineBorder(beigeCol,20, true));
 			
 			JPanel memoUnderBar = new JPanel();
-			JButton memoCreateBtn = new JButton("저장");
+			memoUnderBar.setBackground(Color.white);
+			
+			JButton memoCreateBtn = new JButton(saveBtnImage);
+			memoCreateBtn.setBorder(new EmptyBorder(0,0,0,0));
+			memoCreateBtn.setBackground(Color.white);
 			memoCreateBtn.addActionListener(new ActionListener() {
 				
 				@Override
@@ -345,19 +396,23 @@ public class TodoPage extends JFrame{
 					dto.setEmail(email);
 					dto.setMemo(memoBox.getText());
 					dto.setType("memo");
-					if(memoDto!=null) dto.setMemoNo(memoDto.getMemoNo());
-					System.out.println(dto.getMemoNo());
-					System.out.println(dto.getEmail());
-					System.out.println(dto.getMemo());
-					System.out.println(dto.getType());
-					System.out.println(memoDto);
-					if(memoDto==null) 
-						MemoDAO.getInstance().memoDtoInsert(dto);
-					else 
+					if(memoDto!=null) {
+						dto.setMemoNo(memoDto.getMemoNo());
 						MemoDAO.getInstance().memoDtoUpdate(dto);
+					}else {
+						if(memoBox.getText().toString().equals("")) {
+							JOptionPane.showMessageDialog(
+									TodoPage.this,
+									"오늘의 메모를 입력하세요",
+									"Empty memo error",
+									JOptionPane.INFORMATION_MESSAGE
+									);
+						}else MemoDAO.getInstance().memoDtoInsert(dto, date);
+					}
+					
+						
 				}
 			});
-			
 			memoUnderBar.add(memoCreateBtn);
 			memoUnderBar.setPreferredSize(new Dimension(700, 100));
 			
@@ -376,17 +431,39 @@ public class TodoPage extends JFrame{
 		if(diaryPane==null) {
 			diaryPane = new JPanel();
 			diaryPane.setSize(800,1000);
+			diaryPane.setBackground(Color.white);
 			
 			JPanel diaryTopBar = new JPanel();
+			diaryTopBar.setBackground(Color.white);
 	         diaryTopBar.setLayout(new BorderLayout());
+	         
+		 	JPanel marginPane = new JPanel(){
+		           public void paintComponent(Graphics g) {
+		                g.drawImage(topBackBarImage.getImage(), 0, 0, null);
+		                setOpaque(false); 
+		                super.paintComponent(g);
+		            }
+		 	};
+		 	
+			JPanel centerPane = new JPanel(){
+	            public void paintComponent(Graphics g) {
+	                g.drawImage(diaryTopImage.getImage(), 0, 0, null);
+	                setOpaque(false); 
+	                super.paintComponent(g);
+	            }
+			};
+			
+		 	diaryTopBar.add(marginPane, BorderLayout.NORTH);
+		 	diaryTopBar.add(centerPane, BorderLayout.CENTER);
+		 	
 	         JLabel diarydate = new JLabel(date.toString());
 	         Font font = new Font("굴림 보통", Font.BOLD, 15);
 	         diarydate.setFont(font);
 	         diarydate.setAlignmentX(JLabel.CENTER);
 	         diarydate.setVerticalAlignment(JLabel.BOTTOM);
 	         diarydate.setHorizontalAlignment(JLabel.RIGHT);
-	         diaryTopBar.add(diarydate);
-	         diaryTopBar.setPreferredSize(new Dimension(600,100));
+	         diaryTopBar.add(diarydate, BorderLayout.EAST);
+	         diaryTopBar.setPreferredSize(new Dimension(700,100));
 			
 			diaryBox = new JTextArea();
 			MemoDTO diaryDto = MemoDAO.getInstance().getDiary(date, email);
@@ -395,10 +472,16 @@ public class TodoPage extends JFrame{
 			}
 	
 			JScrollPane diaryScroll = new JScrollPane(diaryBox);
-			diaryScroll.setPreferredSize(new Dimension(600, 400));	
+			diaryScroll.setPreferredSize(new Dimension(700, 600));	
+			diaryScroll.setBorder(new LineBorder(beigeCol,20,true));
 			
 			JPanel diaryUnderBar = new JPanel();
-			JButton diaryCreateBtn = new JButton("저장");
+			diaryUnderBar.setBackground(Color.white);
+			
+			JButton diaryCreateBtn = new JButton(saveBtnImage);
+			diaryCreateBtn.setBorder(new EmptyBorder(0,0,0,0));
+			diaryCreateBtn.setBackground(Color.white);
+			
 			diaryCreateBtn.addActionListener(new ActionListener() {
 				
 				@Override
@@ -408,16 +491,19 @@ public class TodoPage extends JFrame{
 					dto.setEmail(email);
 					dto.setMemo(diaryBox.getText());
 					dto.setType("diary");
-					if(diaryDto!=null) dto.setMemoNo(diaryDto.getMemoNo());
-					System.out.println(dto.getMemoNo());
-					System.out.println(dto.getEmail());
-					System.out.println(dto.getMemo());
-					System.out.println(dto.getType());
-					System.out.println(diaryDto);
-					if(diaryDto==null) 
-						MemoDAO.getInstance().memoDtoInsert(dto);
-					else 
+					if(diaryDto!=null) {
+						dto.setMemoNo(diaryDto.getMemoNo());
 						MemoDAO.getInstance().memoDtoUpdate(dto);
+					}else { 
+						if(diaryBox.getText().toString().equals("")) {
+							JOptionPane.showMessageDialog(
+									TodoPage.this,
+									"일기 내용을 입력하세요",
+									"Empty diary error",
+									JOptionPane.INFORMATION_MESSAGE
+									);
+						}else MemoDAO.getInstance().memoDtoInsert(dto, date);
+					}
 				}
 			});
 			

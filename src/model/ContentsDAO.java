@@ -182,17 +182,18 @@ public class ContentsDAO extends MainDAO{
 	
 	
 	//할 일을 한 일로 >> 다하면 finishdate 설정
-	public void contentFinish(ContentsDTO dto) {
+	public void contentFinish(ContentsDTO dto, Date selectdate) {
 		try {
 			connect();
 			
 			String sql = """
 					update contents set
-					finishdate = now()
+					finishdate = ?
 					where contentNo = ?
 					""";
 			PreparedStatement pstmt = conn.prepareStatement(sql);		
-			pstmt.setInt(1, dto.getContentNo());
+			pstmt.setDate(1, selectdate);
+			pstmt.setInt(2, dto.getContentNo());
 			int row = pstmt.executeUpdate();
 			
 			close();

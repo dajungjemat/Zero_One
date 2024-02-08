@@ -37,6 +37,8 @@ public class MemoDAO extends MainDAO{
 				memoDTO.setMemo(rs.getString(4));
 				memoDTO.setType(rs.getString(5));
 			}
+			close();
+			
 		}catch(SQLException e) {}
 		
 		return memoDTO;
@@ -67,6 +69,8 @@ public class MemoDAO extends MainDAO{
 				memoDTO.setDate(rs.getDate(3));
 				memoDTO.setMemo(rs.getString(4));
 				memoDTO.setType(rs.getString(5));
+				
+				close();
 			}
 		}catch(SQLException e) {}
 		
@@ -74,18 +78,19 @@ public class MemoDAO extends MainDAO{
 	}
 	
 	//만들기
-	public void memoDtoInsert(MemoDTO dto) {
+	public void memoDtoInsert(MemoDTO dto, Date selectdate) {
 		try {
 			connect();
 			
 			String  sql = """
 					insert into memos (email, date, memo, memotype) 
-					values (? , now(), ?, ?)
+					values (? , ?, ?, ?)
 					""";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getEmail());
-			pstmt.setString(2, dto.getMemo());
-			pstmt.setString(3, dto.getType());
+			pstmt.setDate(2, selectdate);
+			pstmt.setString(3, dto.getMemo());
+			pstmt.setString(4, dto.getType());
 		
 			int row = pstmt.executeUpdate();
 			
