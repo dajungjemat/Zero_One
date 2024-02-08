@@ -4,25 +4,35 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
+import java.awt.event.WindowListener;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 import model.ContentsDAO;
 import model.ContentsDTO;
@@ -36,32 +46,47 @@ public class TodoCreatePage extends JFrame{
 	private Date endDate;
 	private String email = null;
 	private TodoPage todoPage;
+	//style
+	private Color beigeCol = new Color(243, 232, 214);
+	private Color beigeColOp = new Color(255, 249, 239);
+	private Color greyCol = new Color(165, 165, 165);
+	ImageIcon saveBtnImage = new ImageIcon(TodoPage.class.getResource("saveBtn.png"));
+	ImageIcon topBackImage = new ImageIcon(TodoPage.class.getResource("topBack.png"));
+
 	
 	public TodoCreatePage(TodoPage todoPage ,String email){
 		this.todoPage = todoPage;
 		this.email = email;
+		this.setBackground(Color.white);
 		setTitle("일정 생성");
 		setSize(700,300);
 		locationCenter();
-		setLayout(new GridLayout(3,0));
+		setLayout(new GridLayout(4,0));
+		
+		JPanel marginPane = new JPanel(){
+	            public void paintComponent(Graphics g) {
+	                g.drawImage(topBackImage.getImage(), 0, 0, null);
+	                setOpaque(false); 
+	                super.paintComponent(g);
+	            }
+	    };
+	    
+		getContentPane().add(marginPane);
 		getContentPane().add(getContentInputPane());
 		getContentPane().add(getSetdatePane());
 		getContentPane().add(getBtnPane());
-		
+	
 	}
 	
 	private JPanel getContentInputPane() {
 		if(contentInputPane==null) {
 			contentInputPane = new JPanel();
 			contentInputPane.setBackground(Color.white);
-			
-			contentInputBox = new JTextField("") {
-				@Override
-				public void setBorder(Border border) {
-					
-				}
-			};
-			contentInputBox.setPreferredSize(new Dimension(600,80));
+			contentInputBox = new JTextField();
+			contentInputBox.setText("할 일을 입력하세요");
+			contentInputBox.setBorder(new LineBorder(beigeCol, 5 ,true));
+	
+			contentInputBox.setPreferredSize(new Dimension(600,60));
 			contentInputPane.add(contentInputBox);
 			
 		}
@@ -86,10 +111,12 @@ public class TodoCreatePage extends JFrame{
 		if(startDatePane==null) {
 			startDatePane = new JPanel();
 			startDatePane.setBackground(Color.white);
-			startDatePane.setPreferredSize(new Dimension(300,80));
+//			startDatePane.setLayout(new FlowLayout());
 			JComboBox yearCombo = new JComboBox(DateArray.getYear());
+			yearCombo.setBackground(Color.white);
 			yearCombo.setSelectedItem(calStart.get(Calendar.YEAR)+"");
 			JComboBox monthCombo = new JComboBox(DateArray.getMonth());
+			monthCombo.setBackground(Color.white);
 			monthCombo.setSelectedItem((calStart.get(Calendar.MONTH)+1)+"");
 			
 			int yearInt = Integer.parseInt(yearCombo.getSelectedItem().toString());
@@ -101,9 +128,11 @@ public class TodoCreatePage extends JFrame{
 			}
 			
 			JComboBox dayCombo = new JComboBox(getDay);
+			dayCombo.setBackground(Color.white);
 			dayCombo.setSelectedItem(calStart.get(Calendar.DAY_OF_MONTH)+"");;
 			int dayInt = Integer.parseInt(dayCombo.getSelectedItem().toString());
 			
+			startDatePane.add(new JLabel("START-DATE"));
 			startDatePane.add(yearCombo);
 			startDatePane.add(monthCombo);
 			startDatePane.add(dayCombo);
@@ -158,10 +187,11 @@ public class TodoCreatePage extends JFrame{
 		if(endDatePane==null) {
 			endDatePane = new JPanel();
 			endDatePane.setBackground(Color.white);
-			endDatePane.setPreferredSize(new Dimension(300,80));
 			JComboBox yearComboE = new JComboBox(DateArray.getYear());
+			yearComboE.setBackground(Color.white);
 			yearComboE.setSelectedItem(calEnd.get(Calendar.YEAR)+"");
 			JComboBox monthComboE = new JComboBox(DateArray.getMonth());
+			monthComboE.setBackground(Color.white);
 			monthComboE.setSelectedItem((calEnd.get(Calendar.MONTH)+1)+"");
 			
 			int yearInt = Integer.parseInt(yearComboE.getSelectedItem().toString());
@@ -173,16 +203,17 @@ public class TodoCreatePage extends JFrame{
 			}
 			
 			JComboBox dayComboE = new JComboBox(getDay);
+			dayComboE.setBackground(Color.white);
 			dayComboE.setSelectedItem(calEnd.get(Calendar.DAY_OF_MONTH)+"");;
 			int dayInt = Integer.parseInt(dayComboE.getSelectedItem().toString());
 			
+			endDatePane.add(new JLabel("END-DATE"));
 			endDatePane.add(yearComboE);
 			endDatePane.add(monthComboE);
 			endDatePane.add(dayComboE);
 			
 
 			endDate = new Date(calEnd.getTimeInMillis());
-			System.out.println(endDate);
 			
 			yearComboE.addActionListener(new ActionListener() {
 				
@@ -254,22 +285,33 @@ public class TodoCreatePage extends JFrame{
 			btnPane = new JPanel();
 			btnPane.setPreferredSize(new Dimension(600,80));
 			btnPane.setBackground(Color.white);
-			JButton contentInsertButton = new JButton("저장");
+			JButton contentInsertButton = new JButton(saveBtnImage);
+			contentInsertButton.setBorder(new EmptyBorder(0,0,0,0));
+			contentInsertButton.setBackground(Color.white);
 			
 			contentInsertButton.addActionListener(new ActionListener() {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					ContentsDTO dto = new ContentsDTO();
-					dto.setContent(contentInputBox.getText());
-					dto.setStartDate(startDate);
-					dto.setEndDate(endDate);
-					dto.setEmail(email);
-					
-					ContentsDAO.getInstance().contentsDtoInsert(dto);
-					todoPage.refreshContentPane();
-					setVisible(false);
-					
+					if(contentInputBox.getText().toString().equals("")||
+							contentInputBox.getText().toString().equals("할 일을 입력하세요")) {
+						JOptionPane.showMessageDialog(
+								TodoCreatePage.this,
+								"할 일을 입력하세요",
+								"Empty contents error",
+								JOptionPane.INFORMATION_MESSAGE
+								);
+					}else {
+						ContentsDTO dto = new ContentsDTO();
+						dto.setContent(contentInputBox.getText());
+						dto.setStartDate(startDate);
+						dto.setEndDate(endDate);
+						dto.setEmail(email);
+						
+						ContentsDAO.getInstance().contentsDtoInsert(dto);
+						todoPage.refreshContentPane();
+						setVisible(false);
+					}
 				}
 			});
 			
@@ -278,10 +320,7 @@ public class TodoCreatePage extends JFrame{
 		return btnPane;
 	}
 	
-	
-	
 
-	
 	private void locationCenter() {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Point centerPoint = ge.getCenterPoint();

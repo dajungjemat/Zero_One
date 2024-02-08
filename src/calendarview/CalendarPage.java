@@ -17,7 +17,9 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import javax.naming.ContextNotEmptyException;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -27,6 +29,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -46,8 +49,11 @@ public class CalendarPage extends JFrame{
 	private String email = "dumi1";
 	private Date date = null;
 	public Calendar calendar = Calendar.getInstance();
+	//style
 	private Color beigeCol = new Color(243, 232, 214);
 	private Color beigeColOp = new Color(255, 249, 239);
+	ImageIcon rightBtnImage = new ImageIcon(TodoPage.class.getResource("right.png"));
+	ImageIcon leftBtnImage = new ImageIcon(TodoPage.class.getResource("left.png"));
 	
 	public CalendarPage (){
 		setTitle("타이틀 이름");
@@ -127,7 +133,8 @@ public class CalendarPage extends JFrame{
 	
 	private void updateMonthYear() {
 		
-		preMonthBtn = new JButton("<");
+		preMonthBtn = new JButton(leftBtnImage);
+		preMonthBtn.setBorder(new EmptyBorder(0,0,0,0));
 		preMonthBtn.setBackground(beigeCol);
 		preMonthBtn.addActionListener(new ActionListener() {
 			
@@ -139,7 +146,8 @@ public class CalendarPage extends JFrame{
 				
 			}
 		} );
-		nextMonthBtn = new JButton(">");
+		nextMonthBtn = new JButton(rightBtnImage);
+		nextMonthBtn.setBorder(new EmptyBorder(0,0,0,0));
 		nextMonthBtn.setBackground(beigeCol);
 		nextMonthBtn.addActionListener(new ActionListener() {
 			
@@ -257,19 +265,7 @@ public class CalendarPage extends JFrame{
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	public static void main(String[] args) {

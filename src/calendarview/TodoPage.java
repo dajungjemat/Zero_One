@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -13,6 +14,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -21,6 +23,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 
 import model.ContentsDAO;
 import model.ContentsDTO;
@@ -42,7 +49,19 @@ public class TodoPage extends JFrame{
 	List<ContentsDTO> willDtoList;
 	List<ContentsDTO> didDtoList;
 	List<ContentsDTO> checkList = new ArrayList<ContentsDTO>();
+	//Style
 	private TodoPage todoPage;
+	private Color beigeCol = new Color(243, 232, 214);
+	private Color beigeColOp = new Color(255, 249, 239);
+	private Color greyCol = new Color(165, 165, 165);
+	ImageIcon doneBtnImage = new ImageIcon(TodoPage.class.getResource("DONE.png"));
+	ImageIcon againBtnImage = new ImageIcon(TodoPage.class.getResource("AGAIN.png"));
+	ImageIcon rightBtnImage = new ImageIcon(TodoPage.class.getResource("right.png"));
+	ImageIcon leftBtnImage = new ImageIcon(TodoPage.class.getResource("left.png"));
+	ImageIcon createBtnImage = new ImageIcon(TodoPage.class.getResource("createBtn.png"));
+	ImageIcon deleteBtnImage = new ImageIcon(TodoPage.class.getResource("deleteBtn.png"));
+	ImageIcon topBackBarImage = new ImageIcon(TodoPage.class.getResource("topBackBar.png"));
+
 	
 	public TodoPage(Date date,String email) {
 		this.todoPage = this;
@@ -60,6 +79,7 @@ public class TodoPage extends JFrame{
 			tabPane.addTab("To_Do List", getTodoPane());
 			tabPane.addTab("Memo", getMemoPane());
 			tabPane.addTab("Diary", getDiaryPane());
+			tabPane.setBackground(beigeColOp);
 
 		}
 		return tabPane;
@@ -68,12 +88,24 @@ public class TodoPage extends JFrame{
 	public JPanel getTodoPane() {
 		if(todoPane==null) {
 			todoPane = new JPanel();
+			todoPane.setBackground(Color.white);
+			
 			JPanel timerButtonPane = new JPanel();
+			timerButtonPane.setBackground(Color.white);
 			timerButtonPane.setPreferredSize(new Dimension(700, 100));
-			timerButtonPane.setLayout(new FlowLayout(FlowLayout.LEFT));
-			JButton createContentBtn = new JButton("생성");
-//			createContentBtn.setVerticalAlignment(JButton.BOTTOM);
-//			createContentBtn.setAlignmentX(JButton.RIGHT);
+			timerButtonPane.setLayout(new BorderLayout());
+			
+			JPanel marginPane = new JPanel(){
+	            public void paintComponent(Graphics g) {
+	                g.drawImage(topBackBarImage.getImage(), 0, 0, null);
+	                setOpaque(false); 
+	                super.paintComponent(g);
+	            }
+	    };
+			
+			JButton createContentBtn = new JButton(createBtnImage);
+			createContentBtn.setBackground(Color.white);
+			createContentBtn.setBorder(new EmptyBorder(0,0,0,0));
 			createContentBtn.addActionListener(new ActionListener() {
 				
 				@Override
@@ -83,18 +115,30 @@ public class TodoPage extends JFrame{
 					
 				}
 			});
-			timerButtonPane.add(createContentBtn);
 			
+			timerButtonPane.add(marginPane, BorderLayout.NORTH);
+			timerButtonPane.add(createContentBtn, BorderLayout.EAST);
+			
+			//버튼 업다운
 			JPanel updownButtonPane = new JPanel();
+			updownButtonPane.setBackground(Color.white);
 			updownButtonPane.setPreferredSize(new Dimension(700, 100));
+			updownButtonPane.setLayout(new FlowLayout());
+			JLabel marginLabel = new JLabel();
+			marginLabel.setPreferredSize(new Dimension(70,70));
 			updownButtonPane.add(getDownBtn());
+			updownButtonPane.add(marginLabel);
 			updownButtonPane.add(getUpBtn());
+			updownButtonPane.add(marginLabel);
+			updownButtonPane.add(getDeleteBtn());
 			
 			JScrollPane willScroll = new JScrollPane(getWillPane());
 			willScroll.setPreferredSize(new Dimension(700, 300));
+			willScroll.setBorder(new LineBorder(beigeCol, 5, true));
 			willScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			JScrollPane didScroll = new JScrollPane(getDidPane());
 			didScroll.setPreferredSize(new Dimension(700, 300));
+			didScroll.setBorder(new LineBorder(beigeCol, 5, true));
 			didScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
 			
@@ -110,7 +154,9 @@ public class TodoPage extends JFrame{
 	public JPanel getWillPane() {
 		if(willPane==null) {
 			willPane = new JPanel();
-			willPane.setBackground(Color.red);
+			willPane.setBackground(Color.white);
+			
+			
 			willPane.setLayout(new FlowLayout());
 			
 			//DTO List 불러오기
@@ -130,14 +176,13 @@ public class TodoPage extends JFrame{
 	public JPanel getDidPane() {
 		if(didPane==null) {
 			didPane = new JPanel();
-			didPane.setBackground(Color.blue);
+			didPane.setBackground(Color.white);
 			didPane.setLayout(new FlowLayout());
 			
 			
 			didDtoList = ContentsDAO.getInstance().getDidDTO(date, email);
 			didPane.setPreferredSize(new Dimension(650, didDtoList.size()*36));
 
-			System.out.println(didDtoList.size()+" "+date+" "+email);
 			for(int i=0; i<didDtoList.size();i++) {
 				didPane.add(getContent(didDtoList.get(i)));
 			}
@@ -148,9 +193,11 @@ public class TodoPage extends JFrame{
 	//체크박스가 있는 패널 생성 란
 	public JPanel getContent(ContentsDTO dto) {
 		JPanel contentPane = new JPanel();
+		contentPane.setBackground(Color.white);
 		contentPane.setPreferredSize(new Dimension(600, 30));
 		contentPane.setLayout(new BorderLayout());
 		JCheckBox checkBox = new JCheckBox();
+		checkBox.setBackground(Color.white);
 		checkBox.addActionListener(new ActionListener() {
 			
 			@Override
@@ -178,7 +225,10 @@ public class TodoPage extends JFrame{
 	}
 	
 	public JButton getDownBtn() {
-		JButton downBtn = new JButton("내리기");
+		JButton downBtn = new JButton(doneBtnImage);
+		downBtn.setBackground(Color.white);
+		downBtn.setIcon(doneBtnImage);
+		downBtn.setBorder(new EmptyBorder(0,0,0,0));
 		downBtn.addActionListener(new ActionListener() {
 			
 			@Override
@@ -198,7 +248,10 @@ public class TodoPage extends JFrame{
 	}
 	
 	public JButton getUpBtn() {
-		JButton upBtn = new JButton("올리기");
+		JButton upBtn = new JButton(againBtnImage);
+		upBtn.setBackground(Color.white);
+		upBtn.setBorder(new EmptyBorder(0,0,0,0));
+
 		upBtn.addActionListener(new ActionListener() {
 			
 			@Override
@@ -217,6 +270,29 @@ public class TodoPage extends JFrame{
 			}
 		});
 		return upBtn;
+	}
+	
+	public JButton getDeleteBtn() {
+		JButton deleteBtn = new JButton(deleteBtnImage);
+		deleteBtn.setBackground(Color.white);
+		deleteBtn.setBorder(new EmptyBorder(0,0,0,0));
+
+		deleteBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				for(int i=0; i<checkList.size();i++) {
+						ContentsDAO.getInstance().contentsDtoDelete(checkList.get(i));
+				}
+				
+				checkList.removeAll(checkList);
+				refreshContentPane();   
+
+			}
+		});
+		return deleteBtn;
+		
 	}
 	
 	public void refreshContentPane() {

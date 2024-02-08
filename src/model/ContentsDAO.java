@@ -74,12 +74,14 @@ public class ContentsDAO extends MainDAO{
 			String sql = """
 					select *
 					from contents
-					where finishdate = ? and 
-					email = ? 
+					where startdate <= ? and 
+					enddate >= ? and 
+					email = ? and finishdate is not null 
 					""";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setDate(1, selectDate);
-			pstmt.setString(2, email);
+			pstmt.setDate(2, selectDate);
+			pstmt.setString(3, email);
 			
 			ResultSet rs = pstmt.executeQuery();
 			
@@ -172,6 +174,8 @@ public class ContentsDAO extends MainDAO{
 			pstmt.setInt(1, dto.getContentNo());
 			
 			int row = pstmt.executeUpdate();
+			
+			close();
 			
 		}catch(SQLException e) {}
 	}
