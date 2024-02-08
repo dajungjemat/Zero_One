@@ -218,6 +218,8 @@ public class CommentDialog extends JDialog{
 		BoardsDAO.getInstance().addHitcount(board.getHitcount(), boardNo);
 		titleField.setText(board.getTitle());
 		contentArea.setText(board.getBoardContent());	
+		System.out.println(email);
+		System.out.println(board.getEmail());
 		
 		
 		if(email.equals(board.getEmail())) {

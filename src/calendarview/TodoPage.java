@@ -127,6 +127,7 @@ public class TodoPage extends JFrame{
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					System.out.println(email);
 					TodoCreatePage tcp = new TodoCreatePage(todoPage, email);
 					tcp.setVisible(true);
 					
@@ -178,6 +179,7 @@ public class TodoPage extends JFrame{
 			willPane.setLayout(new FlowLayout());
 			
 			//DTO List 불러오기
+			System.out.println("불러오는 매소드"+date+":"+email);
 			willDtoList = ContentsDAO.getInstance().getWillDTO(date, email);
 			willPane.setPreferredSize(new Dimension(650, willDtoList.size()*36));
 			

@@ -45,7 +45,7 @@ public class TodoCreatePage extends JFrame{
 	Calendar calEnd = Calendar.getInstance();
 	private Date endDate;
 	private String email = null;
-	private TodoPage todoPage;
+	private TodoPage todoPage = null;
 	//style
 	private Color beigeCol = new Color(243, 232, 214);
 	private Color beigeColOp = new Color(255, 249, 239);

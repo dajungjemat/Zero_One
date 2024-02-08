@@ -72,7 +72,7 @@ public class CalendarPage extends JFrame{
 	
 	private CalendarPage board; //
 	// 로그인 창에서 받아오 정보
-	private String email = "dumi1";
+	private String email = null;
 	private String nickname = null;
 	
 	
@@ -84,7 +84,7 @@ public class CalendarPage extends JFrame{
 	ImageIcon userLogo = new ImageIcon(TodoPage.class.getResource("userLogo.png"));
 	List<ImageIcon> calendarImages;
 	
-	public CalendarPage (){//연결 매개 변수 넣기
+	public CalendarPage (String email, String nickname){//연결 매개 변수 넣기
 		this.board = this;
 		this.email = email;
 		this.nickname = nickname;
@@ -256,11 +256,9 @@ public class CalendarPage extends JFrame{
 		                @Override
 		                public void actionPerformed(ActionEvent e) {
 		                	calendar.set(Calendar.DATE, finalDay);
-		                	System.out.println(calendar.get(Calendar.YEAR));
-		                	System.out.println(calendar.get(Calendar.MONTH)+1);
-		                	System.out.println(calendar.get(Calendar.DAY_OF_MONTH));
 		                	date = new Date(calendar.getTimeInMillis());
 		                	System.out.println(date);
+		                	System.out.println(email);
 		                	TodoPage tp = new TodoPage(date ,email);
 		                	tp.setVisible(true);
 		                }
@@ -376,7 +374,7 @@ public class CalendarPage extends JFrame{
 					int rowIndex = jTable.getSelectedRow();
 					if (rowIndex != -1) {
 						int boardNo = (int) jTable.getValueAt(rowIndex, 0);
-						String email = (String) jTable.getValueAt(rowIndex, 4);
+						System.out.println("캘린더에서 이메일"+email);
 						CommentDialog commentDialog = new CommentDialog(board, boardNo, email);
 						commentDialog.setVisible(true);
 						refreshBoard();
@@ -432,13 +430,6 @@ public class CalendarPage extends JFrame{
 
 	
 	//-----------------------------------------실행 메서드---------------------------------------------------------------
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(()->{
-			CalendarPage cp = new CalendarPage();
-			cp.setVisible(true);
-			
-		});
-	}
 	
 	
 	private void locationCenter() {

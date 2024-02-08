@@ -30,6 +30,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import JoinMemberJ.JoinMember;
+import calendarview.CalendarPage;
 import model.UserDAO;
 
 public class Login extends JFrame implements FocusListener{
@@ -160,7 +161,11 @@ public class Login extends JFrame implements FocusListener{
 						JOptionPane.showMessageDialog(null, "비밀번호가 일치하지 않습니다. 다시 입력해주세요.","확인",JOptionPane.PLAIN_MESSAGE);
 						txtPassword.requestFocus();
 					}else {
-						JOptionPane.showMessageDialog(null, "로그인 되었습니다.","확인",JOptionPane.PLAIN_MESSAGE);
+						String emailCp = txtEmail.getText();
+						String nicknameCp = UserDAO.getInstance().getUserNickName(emailCp);
+						CalendarPage cp = new CalendarPage(emailCp, nicknameCp);
+						dispose();
+						cp.setVisible(true);
 					}
 				}
 			});
