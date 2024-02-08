@@ -13,9 +13,6 @@ public class Doit {
 			System.out.println("연결 취소");
 		}catch(SQLException e) {}
 
-		
-		
-
 	}
 
 }
