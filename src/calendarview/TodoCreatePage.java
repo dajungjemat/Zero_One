@@ -46,6 +46,7 @@ public class TodoCreatePage extends JFrame{
 	private Date endDate;
 	private String email = null;
 	private TodoPage todoPage = null;
+	private Date date=null;
 	//style
 	private Color beigeCol = new Color(243, 232, 214);
 	private Color beigeColOp = new Color(255, 249, 239);
@@ -54,7 +55,8 @@ public class TodoCreatePage extends JFrame{
 	ImageIcon topBackImage = new ImageIcon(TodoPage.class.getResource("topBack.png"));
 
 	
-	public TodoCreatePage(TodoPage todoPage ,String email){
+	public TodoCreatePage(TodoPage todoPage ,String email, Date date){
+		this.date = date;
 		this.todoPage = todoPage;
 		this.email = email;
 		this.setBackground(Color.white);
@@ -101,8 +103,13 @@ public class TodoCreatePage extends JFrame{
 				setdatePane = new JPanel();
 				setdatePane.setBackground(Color.white);
 				setdatePane.setLayout(new GridLayout(0,2));
+				calStart.setTime(date);
+				calEnd.setTime(date);				
 				setdatePane.add(getStartDatePane());
 				setdatePane.add(getEndDatePane());
+
+
+		
 			}
 		}catch(Exception e) {}
 

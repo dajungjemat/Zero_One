@@ -128,7 +128,7 @@ public class TodoPage extends JFrame{
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					System.out.println(email);
-					TodoCreatePage tcp = new TodoCreatePage(todoPage, email);
+					TodoCreatePage tcp = new TodoCreatePage(todoPage, email, date);
 					tcp.setVisible(true);
 					
 				}

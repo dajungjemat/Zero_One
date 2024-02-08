@@ -3,7 +3,6 @@ package calendarview;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Desktop.Action;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -11,9 +10,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -21,29 +18,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Array;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.naming.ContextNotEmptyException;
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -65,7 +55,7 @@ public class CalendarPage extends JFrame{
 	private JPanel topBar, monthYearBtnPane, calendarPane, calendarTabPane;
 	private JLabel userNameInTopBar,monthYearLabel;
 	// 게시판 변수
-	private JPanel boardTabPane,pNorth,pCenter,pSouth;
+	private JPanel boardTabPane,pNorth,pCenter,pSouth,panel;
 	private JLabel boardLabel;
 	private JTable jTable;
 	private RoundedButton btnInsert;
@@ -313,15 +303,34 @@ public class CalendarPage extends JFrame{
 	public JPanel getPCenter() {
 		if(pCenter ==null) {
 			pCenter = new JPanel(new BorderLayout());
+			pCenter.add(getPanel(),BorderLayout.NORTH);
 			JScrollPane centerScrollPane = new JScrollPane(getBoardTable());
 			centerScrollPane.setBorder(null);
 			pCenter.add(centerScrollPane,BorderLayout.CENTER);
-			pCenter.setBorder(BorderFactory.createEmptyBorder(200, 200, 50, 200));
+//			pCenter.setBorder(BorderFactory.createEmptyBorder(200, 200, 50, 200));
 			pCenter.setBackground(Color.WHITE);
 			
 		}
 			return pCenter;
 		
+	}
+	
+	private JPanel getPanel() {
+		if(panel == null) {
+			panel = new JPanel();
+			panel.setLayout(null);
+			panel.setBackground(Color.WHITE);
+			panel.setPreferredSize(new Dimension(1100,200));
+			RoundedButton button = new RoundedButton();
+			button.setText("추가");
+			button.setBounds(1850, 150, 100, 40);
+			panel.add(button);
+			JLabel label = new JLabel();
+			label.setIcon(new ImageIcon(getClass().getResource("picture.png")));
+			label.setBounds(475, 25, 1000, 150);
+			panel.add(label);
+		}
+		return panel;
 	}
 		
 	
