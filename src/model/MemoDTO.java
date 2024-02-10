@@ -2,7 +2,9 @@ package model;
 
 import java.sql.Date;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 
 @Data
 @AllArgsConstructor

@@ -11,9 +11,11 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -79,7 +81,10 @@ public class CalendarPage extends JFrame{
 		this.email = email;
 		this.nickname = nickname;
 		setTitle("타이틀 이름");
-		setSize(2000,1200);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		int x = (int) ((int) screenSize.getWidth()*0.8);
+		int y = (int) ((int) screenSize.getHeight()*0.8);
+		setSize(x,y);
 		locationCenter();
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
@@ -238,7 +243,14 @@ public class CalendarPage extends JFrame{
 		        for (int day = 1; day <= daysInMonth; day++) {
 		  	      
 		        	ImageIcon calendarBtnImage = new ImageIcon(CalendarPage.class.getResource("calendar"+day+".png"));
-		            JButton dayButton = new JButton(calendarBtnImage);
+		        	Image img = calendarBtnImage.getImage();
+		        	
+		        	int width = (int)(this.getWidth()*0.12);
+		        	int height = (int)(this.getHeight()*0.1);
+		        	Image img2 = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		        	
+		        	
+		            JButton dayButton = new JButton(new ImageIcon(img2));
 		            dayButton.setBackground(Color.white);
 		            dayButton.setBorder(new EmptyBorder(0,0,0,0));
 		            int finalDay = day;

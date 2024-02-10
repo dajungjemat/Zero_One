@@ -7,7 +7,9 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -31,6 +33,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.tools.Tool;
 
 import model.ContentsDAO;
 import model.ContentsDTO;
@@ -69,13 +72,18 @@ public class TodoPage extends JFrame{
 	ImageIcon memoTopImage = new ImageIcon(TodoPage.class.getResource("memoTopImage.png"));
 	ImageIcon diaryTopImage = new ImageIcon(TodoPage.class.getResource("diaryTopImage.png"));
 	ImageIcon todoTopImage = new ImageIcon(TodoPage.class.getResource("todoTopImage.png"));
+	Image imgTopBack2;
 	
 	public TodoPage(Date date,String email) {
 		this.todoPage = this;
 		this.date = date;
 		this.email = email;
-		setSize(800,1000);
-		locationCenter();
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		int x = (int)((int) screenSize.getWidth()*0.4 );
+		int y = (int)((int) screenSize.getHeight()*0.75);
+		setSize(x,y);
+		locationPane();
+//		setResizable(false);
 		setDefaultCloseOperation(TEXT_CURSOR);
 
 		getContentPane().add(getTabPane());	
@@ -101,26 +109,40 @@ public class TodoPage extends JFrame{
 			
 			JPanel timerButtonPane = new JPanel();
 			timerButtonPane.setBackground(Color.white);
-			timerButtonPane.setPreferredSize(new Dimension(700, 100));
+			timerButtonPane.setPreferredSize(new Dimension((int)(this.getWidth()*7/8), (int)(this.getHeight()*0.1)));
 			timerButtonPane.setLayout(new BorderLayout());
+			
+			Image imgTopBack = topBackBarImage.getImage();
+			int imgWidthBack = (int) (this.getWidth()*0.9);
+			int imgHeightBack = (int) (this.getHeight()*0.1);
+			imgTopBack2 = imgTopBack.getScaledInstance(imgWidthBack, imgHeightBack, Image.SCALE_SMOOTH);
 			
 			JPanel marginPane = new JPanel(){
 	            public void paintComponent(Graphics g) {
-	                g.drawImage(topBackBarImage.getImage(), 0, 0, null);
+	                g.drawImage(imgTopBack2, 0, 0, null);
 	                setOpaque(false); 
 	                super.paintComponent(g);
 	            }
 			};
+			Image imgTop = todoTopImage.getImage();
+			int imgWidth = (int) (this.getWidth()*0.25);
+			int imgHeight = (int) (this.getHeight()*0.09);
+			Image imgTop2 = imgTop.getScaledInstance(imgWidth, imgHeight, Image.SCALE_SMOOTH);
 			
 			JPanel centerPane = new JPanel(){
 	            public void paintComponent(Graphics g) {
-	                g.drawImage(todoTopImage.getImage(), 0, 0, null);
+	            	
+	                g.drawImage(imgTop2, 0, 0, null);
 	                setOpaque(false); 
 	                super.paintComponent(g);
 	            }
 			};
 			
-			JButton createContentBtn = new JButton(createBtnImage);
+			Image img = createBtnImage.getImage();
+			int btnSize = (int) (this.getWidth()*0.09);
+			Image img2 = img.getScaledInstance(btnSize, btnSize, Image.SCALE_SMOOTH);
+			
+			JButton createContentBtn = new JButton(new ImageIcon(img2));
 			createContentBtn.setBackground(Color.white);
 			createContentBtn.setBorder(new EmptyBorder(0,0,0,0));
 			createContentBtn.addActionListener(new ActionListener() {
@@ -141,10 +163,10 @@ public class TodoPage extends JFrame{
 			//버튼 업다운
 			JPanel updownButtonPane = new JPanel();
 			updownButtonPane.setBackground(Color.white);
-			updownButtonPane.setPreferredSize(new Dimension(700, 100));
+			updownButtonPane.setPreferredSize(new Dimension((int)(this.getWidth()*7/8), (int)(this.getHeight()*0.1)));
 			updownButtonPane.setLayout(new FlowLayout());
 			JLabel marginLabel = new JLabel();
-			marginLabel.setPreferredSize(new Dimension(70,70));
+			marginLabel.setPreferredSize(new Dimension((int)(this.getWidth()*7/80),(int)(this.getHeight()*0.07)));
 			updownButtonPane.add(getDownBtn());
 			updownButtonPane.add(marginLabel);
 			updownButtonPane.add(getUpBtn());
@@ -152,11 +174,11 @@ public class TodoPage extends JFrame{
 			updownButtonPane.add(getDeleteBtn());
 			
 			JScrollPane willScroll = new JScrollPane(getWillPane());
-			willScroll.setPreferredSize(new Dimension(700, 300));
+			willScroll.setPreferredSize(new Dimension((int)(this.getWidth()*7/8), (int)(this.getHeight()*0.3)));
 			willScroll.setBorder(new LineBorder(beigeCol, 20, true));
 			willScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			JScrollPane didScroll = new JScrollPane(getDidPane());
-			didScroll.setPreferredSize(new Dimension(700, 300));
+			didScroll.setPreferredSize(new Dimension((int)(this.getWidth()*7/8), (int)(this.getHeight()*0.3)));
 			didScroll.setBorder(new LineBorder(beigeCol, 20, true));
 			didScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -179,9 +201,8 @@ public class TodoPage extends JFrame{
 			willPane.setLayout(new FlowLayout());
 			
 			//DTO List 불러오기
-			System.out.println("불러오는 매소드"+date+":"+email);
 			willDtoList = ContentsDAO.getInstance().getWillDTO(date, email);
-			willPane.setPreferredSize(new Dimension(650, willDtoList.size()*36));
+			willPane.setPreferredSize(new Dimension((int)(this.getWidth()*13/16), willDtoList.size()*36));
 			
 			System.out.println(willDtoList.size());
 			for(int i=0; i<willDtoList.size();i++) {
@@ -201,7 +222,7 @@ public class TodoPage extends JFrame{
 			
 			
 			didDtoList = ContentsDAO.getInstance().getDidDTO(date, email);
-			didPane.setPreferredSize(new Dimension(650, didDtoList.size()*36));
+			didPane.setPreferredSize(new Dimension((int)(this.getWidth()*13/16), didDtoList.size()*36));
 
 			for(int i=0; i<didDtoList.size();i++) {
 				didPane.add(getContent(didDtoList.get(i)));
@@ -214,7 +235,7 @@ public class TodoPage extends JFrame{
 	public JPanel getContent(ContentsDTO dto) {
 		JPanel contentPane = new JPanel();
 		contentPane.setBackground(Color.white);
-		contentPane.setPreferredSize(new Dimension(600, 30));
+		contentPane.setPreferredSize(new Dimension((int)(this.getWidth()*3/4), (int)(this.getHeight()*0.03)));
 		contentPane.setLayout(new BorderLayout());
 		
 		JCheckBox checkBox = new JCheckBox();
@@ -250,10 +271,15 @@ public class TodoPage extends JFrame{
 	}
 	
 	public JButton getDownBtn() {
-		JButton downBtn = new JButton(doneBtnImage);
+
+		Image img = doneBtnImage.getImage();
+		int btnSize = (int) (this.getWidth()*0.09);
+		Image img2 = img.getScaledInstance(btnSize, btnSize, Image.SCALE_SMOOTH);
+		
+		JButton downBtn = new JButton(new ImageIcon(img2));
 		downBtn.setBackground(Color.white);
-		downBtn.setIcon(doneBtnImage);
 		downBtn.setBorder(new EmptyBorder(0,0,0,0));
+		
 		downBtn.addActionListener(new ActionListener() {
 			
 			@Override
@@ -273,7 +299,12 @@ public class TodoPage extends JFrame{
 	}
 	
 	public JButton getUpBtn() {
-		JButton upBtn = new JButton(againBtnImage);
+		
+		Image img = againBtnImage.getImage();
+		int btnSize = (int) (this.getWidth()*0.09);
+		Image img2 = img.getScaledInstance(btnSize, btnSize, Image.SCALE_SMOOTH);
+		
+		JButton upBtn = new JButton(new ImageIcon(img2));
 		upBtn.setBackground(Color.white);
 		upBtn.setBorder(new EmptyBorder(0,0,0,0));
 
@@ -298,7 +329,12 @@ public class TodoPage extends JFrame{
 	}
 	
 	public JButton getDeleteBtn() {
-		JButton deleteBtn = new JButton(deleteBtnImage);
+		
+		Image img = deleteBtnImage.getImage();
+		int btnSize = (int) (this.getWidth()*0.09);
+		Image img2 = img.getScaledInstance(btnSize, btnSize, Image.SCALE_SMOOTH);
+		
+		JButton deleteBtn = new JButton(new ImageIcon(img2));
 		deleteBtn.setBackground(Color.white);
 		deleteBtn.setBorder(new EmptyBorder(0,0,0,0));
 
@@ -336,25 +372,29 @@ public class TodoPage extends JFrame{
 	public JPanel getMemoPane() {
 		if(memoPane==null) {
 			memoPane = new JPanel();
-			memoPane.setSize(800,1000);
 			memoPane.setBackground(Color.white);
 			
 			JPanel memoTopBar = new JPanel();
-			memoTopBar.setPreferredSize(new Dimension(700, 100));
+			memoTopBar.setPreferredSize(new Dimension((int)(this.getWidth()*7/8), (int)(this.getHeight()*0.1)));
 			memoTopBar.setBackground(Color.white);
 	         memoTopBar.setLayout(new BorderLayout());
 	         
 	 		JPanel marginPane = new JPanel(){
 	            public void paintComponent(Graphics g) {
-	                g.drawImage(topBackBarImage.getImage(), 0, 0, null);
+	                g.drawImage(imgTopBack2, 0, 0, null);
 	                setOpaque(false); 
 	                super.paintComponent(g);
 	            }
 	 		};
 	 		
+	        Image imgTop = memoTopImage.getImage();
+	    	int imgWidth = (int) (this.getWidth()*0.25);
+	    	int imgHeight = (int) (this.getHeight()*0.09);
+	    	Image imgTop2 = imgTop.getScaledInstance(imgWidth, imgHeight, Image.SCALE_SMOOTH);	 
+	    	
 			JPanel centerPane = new JPanel(){
 	            public void paintComponent(Graphics g) {
-	                g.drawImage(memoTopImage.getImage(), 0, 0, null);
+	                g.drawImage(imgTop2, 0, 0, null);
 	                setOpaque(false); 
 	                super.paintComponent(g);
 	            }
@@ -380,7 +420,7 @@ public class TodoPage extends JFrame{
 			}
 	
 			JScrollPane memoScroll = new JScrollPane(memoBox);
-			memoScroll.setPreferredSize(new Dimension(700, 600));
+			memoScroll.setPreferredSize(new Dimension((int)(this.getWidth()*7/8), (int)(this.getHeight()*0.6)));
 			memoScroll.setBorder(new LineBorder(beigeCol,20, true));
 			
 			JPanel memoUnderBar = new JPanel();
@@ -416,7 +456,7 @@ public class TodoPage extends JFrame{
 				}
 			});
 			memoUnderBar.add(memoCreateBtn);
-			memoUnderBar.setPreferredSize(new Dimension(700, 100));
+			memoUnderBar.setPreferredSize(new Dimension((int)(this.getWidth()*7/8), (int)(this.getHeight()*0.1)));
 			
 			memoPane.add(memoTopBar);
 			memoPane.add(memoScroll);
@@ -432,24 +472,29 @@ public class TodoPage extends JFrame{
 	public JPanel getDiaryPane() {
 		if(diaryPane==null) {
 			diaryPane = new JPanel();
-			diaryPane.setSize(800,1000);
 			diaryPane.setBackground(Color.white);
 			
 			JPanel diaryTopBar = new JPanel();
 			diaryTopBar.setBackground(Color.white);
 	         diaryTopBar.setLayout(new BorderLayout());
-	         
+	        
 		 	JPanel marginPane = new JPanel(){
 		           public void paintComponent(Graphics g) {
-		                g.drawImage(topBackBarImage.getImage(), 0, 0, null);
+		                g.drawImage(imgTopBack2, 0, 0, null);
 		                setOpaque(false); 
 		                super.paintComponent(g);
 		            }
 		 	};
 		 	
+	        Image imgTop = diaryTopImage.getImage();
+	    	int imgWidth = (int) (this.getWidth()*0.25);
+	    	int imgHeight = (int) (this.getHeight()*0.09);
+	    	Image imgTop2 = imgTop.getScaledInstance(imgWidth, imgHeight, Image.SCALE_SMOOTH);	
+	    			
 			JPanel centerPane = new JPanel(){
 	            public void paintComponent(Graphics g) {
-	                g.drawImage(diaryTopImage.getImage(), 0, 0, null);
+
+	                g.drawImage(imgTop2, 0, 0, null);
 	                setOpaque(false); 
 	                super.paintComponent(g);
 	            }
@@ -465,7 +510,7 @@ public class TodoPage extends JFrame{
 	         diarydate.setVerticalAlignment(JLabel.BOTTOM);
 	         diarydate.setHorizontalAlignment(JLabel.RIGHT);
 	         diaryTopBar.add(diarydate, BorderLayout.EAST);
-	         diaryTopBar.setPreferredSize(new Dimension(700,100));
+	         diaryTopBar.setPreferredSize(new Dimension((int)(this.getWidth()*7/8), (int)(this.getHeight()*0.1)));
 			
 			diaryBox = new JTextArea();
 			MemoDTO diaryDto = MemoDAO.getInstance().getDiary(date, email);
@@ -474,7 +519,7 @@ public class TodoPage extends JFrame{
 			}
 	
 			JScrollPane diaryScroll = new JScrollPane(diaryBox);
-			diaryScroll.setPreferredSize(new Dimension(700, 600));	
+			diaryScroll.setPreferredSize(new Dimension((int)(this.getWidth()*7/8), (int)(this.getHeight()*0.6)));	
 			diaryScroll.setBorder(new LineBorder(beigeCol,20,true));
 			
 			JPanel diaryUnderBar = new JPanel();
@@ -510,7 +555,7 @@ public class TodoPage extends JFrame{
 			});
 			
 			diaryUnderBar.add(diaryCreateBtn);
-			diaryUnderBar.setPreferredSize(new Dimension(700, 100));
+			diaryUnderBar.setPreferredSize(new Dimension((int)(this.getWidth()*7/8), (int)(this.getHeight()*0.1)));
 			
 			diaryPane.add(diaryTopBar);
 			diaryPane.add(diaryScroll);
@@ -520,11 +565,12 @@ public class TodoPage extends JFrame{
 	}
 	
 
-	private void locationCenter() {
+	private void locationPane() {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Point centerPoint = ge.getCenterPoint();
 		int leftTopX = centerPoint.x - this.getWidth()/2;
 		int leftTopY = centerPoint.y - this.getHeight()/2;
-		this.setLocation(leftTopX+550, leftTopY);
+		
+		this.setLocation(leftTopX+(this.getWidth()*550/800), leftTopY);
 	}	
 }

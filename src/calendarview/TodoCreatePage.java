@@ -8,7 +8,9 @@ import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -61,25 +63,27 @@ public class TodoCreatePage extends JFrame{
 		this.email = email;
 		this.setBackground(Color.white);
 		setTitle("일정 생성");
-		setSize(700,300);
+		int x = (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth()*0.4);
+		int y = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight()*0.3);
+		setSize(x,y);
+		setResizable(false);
 		locationCenter();
 		setDefaultCloseOperation(TEXT_CURSOR);
 
 		setLayout(new GridLayout(4,0));
 		
-		JPanel marginPane = new JPanel(){
-	            public void paintComponent(Graphics g) {
-	                g.drawImage(topBackImage.getImage(), 0, 0, null);
-	                setOpaque(false); 
-	                super.paintComponent(g);
-	            }
-	    };
+		Image imgTop = topBackImage.getImage();
+	    int imgWidth = (int) (this.getWidth());
+	    int imgHeight = (int) (this.getHeight()*0.22);
+	    Image imgTop2 = imgTop.getScaledInstance(imgWidth, imgHeight, Image.SCALE_SMOOTH);
 	    
-		getContentPane().add(marginPane);
+	    JLabel marginLabel = new JLabel();
+	    marginLabel.setIcon(new ImageIcon(imgTop2));
+	    
+	    getContentPane().add(marginLabel);
 		getContentPane().add(getContentInputPane());
 		getContentPane().add(getSetdatePane());
 		getContentPane().add(getBtnPane());
-	
 	}
 	
 	private JPanel getContentInputPane() {
@@ -90,7 +94,7 @@ public class TodoCreatePage extends JFrame{
 			contentInputBox.setText("할 일을 입력하세요");
 			contentInputBox.setBorder(new LineBorder(beigeCol, 5 ,true));
 	
-			contentInputBox.setPreferredSize(new Dimension(600,60));
+			contentInputBox.setPreferredSize(new Dimension((int)(this.getWidth()*0.9),(int)(this.getHeight()*0.2)));
 			contentInputPane.add(contentInputBox);
 			
 		}
@@ -292,9 +296,14 @@ public class TodoCreatePage extends JFrame{
 	private JPanel getBtnPane() {
 		if(btnPane==null) {
 			btnPane = new JPanel();
-			btnPane.setPreferredSize(new Dimension(600,80));
+			btnPane.setPreferredSize(new Dimension((int)(this.getWidth()*0.9),(int)(this.getHeight()*0.15)));
 			btnPane.setBackground(Color.white);
-			JButton contentInsertButton = new JButton(saveBtnImage);
+			
+			Image imgTop = saveBtnImage.getImage();
+			int btnSize = (int) (this.getHeight()*0.2);
+			Image imgTop2 = imgTop.getScaledInstance(btnSize, btnSize, Image.SCALE_SMOOTH);
+			
+			JButton contentInsertButton = new JButton(new ImageIcon(imgTop2));
 			contentInsertButton.setBorder(new EmptyBorder(0,0,0,0));
 			contentInsertButton.setBackground(Color.white);
 			
