@@ -1,11 +1,14 @@
 package model;
 
-import java.sql.Date;
+import java.sql.Date; 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+
+import javax.print.attribute.standard.PresentationDirection;
 
 import org.w3c.dom.xpath.XPathResult;
 
@@ -209,6 +212,7 @@ public class ContentsDAO extends MainDAO{
 		try {
 			connect();
 			
+			
 			String sql = """
 					update contents set
 					finishdate = null
@@ -222,6 +226,7 @@ public class ContentsDAO extends MainDAO{
 			
 		}catch(SQLException e) {}
 	}
+	
 
 	
 }

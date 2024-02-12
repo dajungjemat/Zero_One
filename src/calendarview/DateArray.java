@@ -7,7 +7,7 @@ public class DateArray {
 	
 	static String[] yearArray = new String[201];
 	static String[] monthArray = new String[] {"1", "2","3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-
+	static String[] weekString = new String[] {"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};
 	public static String[] getYear() {
 		
 		Calendar cal = Calendar.getInstance();

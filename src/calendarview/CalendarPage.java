@@ -45,6 +45,7 @@ import javax.swing.table.TableColumnModel;
 
 import model.BoardsDAO;
 import model.BoardsDTO;
+import widgetMode.WidgetMode;
 
 public class CalendarPage extends JFrame{
 	// 공통 변수
@@ -71,11 +72,11 @@ public class CalendarPage extends JFrame{
 	//style
 	private Color beigeCol = new Color(243, 232, 214);
 	private Color beigeColOp = new Color(255, 249, 239);
-	ImageIcon rightBtnImage = new ImageIcon(TodoPage.class.getResource("right.png"));
-	ImageIcon leftBtnImage = new ImageIcon(TodoPage.class.getResource("left.png"));
-	ImageIcon userLogo = new ImageIcon(TodoPage.class.getResource("userLogo.png"));
-	List<ImageIcon> calendarImages;
-	
+	private Color orangeCol = new Color(250,198,96);
+	Image mainTop2;
+	ImageIcon userLogo = new ImageIcon(CalendarPage.class.getResource("userLogo.png"));
+	ImageIcon createBtnImage = new ImageIcon(CalendarPage.class.getResource("createBtn.png"));
+
 	public CalendarPage (String email, String nickname){//연결 매개 변수 넣기
 		this.board = this;
 		this.email = email;
@@ -102,12 +103,29 @@ public class CalendarPage extends JFrame{
 		if(topBar==null) {
 			topBar = new JPanel();
 			topBar.setLayout(new GridLayout(0,5));
-			topBar.setPreferredSize(new Dimension(1800, 80));
+			topBar.setPreferredSize(new Dimension((int)(this.getWidth()*0.9), (int)this.getHeight()/15));
 			topBar.add(new JLabel(""));
 			topBar.add(new JLabel(""));
 			topBar.add(getUserNameInTopBar());
 			topBar.add(new JLabel(""));
-			topBar.add(new JLabel(""));
+			
+			JPanel widgetPane = new JPanel();
+			widgetPane.setLayout(new BorderLayout());
+			JButton widgetBtn = new JButton("Widget Mode");
+			widgetBtn.setBackground(beigeCol);
+			widgetBtn.setBorder(new EmptyBorder(0,0,0,0));
+			widgetBtn.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					WidgetMode wm = new WidgetMode(email, board);
+					wm.setVisible(true);
+					board.setVisible(false);
+				}
+			});
+			widgetPane.add(widgetBtn, BorderLayout.EAST);
+			
+			topBar.add(widgetPane);
 			//유저 이미지랑 이름 추가 
 		}
 		return topBar;
@@ -158,8 +176,8 @@ public class CalendarPage extends JFrame{
 	private JPanel getMonthYearBtnPane() {
 		if(monthYearBtnPane==null) {
 			monthYearBtnPane = new JPanel();
-			monthYearBtnPane.setBackground(beigeCol);
-			monthYearBtnPane.setLayout(new FlowLayout());
+			monthYearBtnPane.setLayout(new BorderLayout());
+			
 			updateMonthYear();	
 		}else {
 			monthYearBtnPane.removeAll();
@@ -171,44 +189,71 @@ public class CalendarPage extends JFrame{
 	
 	private void updateMonthYear() {
 		
-		preMonthBtn = new JButton(leftBtnImage);
+		Image mainTop = new ImageIcon(CalendarPage.class.getResource("mainTopBackImage.png")).getImage();
+		mainTop2 = mainTop.getScaledInstance(this.getWidth(), (int)(this.getHeight()*0.056), Image.SCALE_SMOOTH);
+		monthYearBtnPane.add(new JLabel(new ImageIcon(mainTop2)), BorderLayout.NORTH);
+		int width = (int)(this.getWidth()*0.025);
+		int height = (int)(this.getHeight()*0.07);
+		Image rightBtnImage = new ImageIcon(CalendarPage.class.getResource("right.png")).getImage();
+		Image rightImage = rightBtnImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		Image leftBtnImage = new ImageIcon(CalendarPage.class.getResource("left.png")).getImage();
+		Image leftImage	= leftBtnImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		
+		preMonthBtn = new JButton(new ImageIcon(leftImage));
 		preMonthBtn.setBorder(new EmptyBorder(0,0,0,0));
-		preMonthBtn.setBackground(beigeCol);
+		preMonthBtn.setBackground(Color.white);
 		preMonthBtn.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				calendar.add(Calendar.MONTH, -1);
-				getMonthYearBtnPane();
-				getCalendarPane();
+				
+				CalendarPage.this.monthYearBtnPane.removeAll();
+				CalendarPage.this.calendarPane.removeAll();
+				CalendarPage.this.remove(monthYearBtnPane);
+				CalendarPage.this.remove(calendarPane);
+				calendarPane=null; monthYearBtnPane=null;
+				calendarTabPane.add(getMonthYearBtnPane(),BorderLayout.NORTH);
+				calendarTabPane.add(getCalendarPane(), BorderLayout.CENTER);
+				getMonthYearBtnPane().revalidate();
+				getCalendarPane().revalidate();
 				
 			}
 		} );
-		nextMonthBtn = new JButton(rightBtnImage);
+		nextMonthBtn = new JButton(new ImageIcon(rightImage));
 		nextMonthBtn.setBorder(new EmptyBorder(0,0,0,0));
-		nextMonthBtn.setBackground(beigeCol);
+		nextMonthBtn.setBackground(Color.white);
 		nextMonthBtn.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				calendar.add(Calendar.MONTH, 1);
-				getMonthYearBtnPane();
-				getCalendarPane();
+				
+				CalendarPage.this.monthYearBtnPane.removeAll();
+				CalendarPage.this.calendarPane.removeAll();
+				CalendarPage.this.remove(monthYearBtnPane);
+				CalendarPage.this.remove(calendarPane);
+				calendarPane=null; monthYearBtnPane=null;
+				calendarTabPane.add(getMonthYearBtnPane(),BorderLayout.NORTH);
+				calendarTabPane.add(getCalendarPane(), BorderLayout.CENTER);
+				getMonthYearBtnPane().revalidate();
+				getCalendarPane().revalidate();
 			}
 		});
 
 		monthYearLabel = new JLabel();
 		monthYearLabel.setOpaque(true);
-		monthYearLabel.setPreferredSize(new Dimension(500, 100));
-		monthYearLabel.setBackground(beigeCol);
+//		monthYearLabel.setPreferredSize(new Dimension(500, 100));
+		monthYearLabel.setPreferredSize(new Dimension((int)(this.getWidth()*0.25), (int)this.getHeight()/12));
+		monthYearLabel.setBackground(Color.white);
 		SimpleDateFormat sdf = new SimpleDateFormat("MM.YYYY");
 		monthYearLabel.setText(sdf.format(calendar.getTime()));
 		monthYearLabel.setFont(new Font("한컴 윤고딕 250", Font.BOLD, 50));
 		monthYearLabel.setHorizontalAlignment(JLabel.CENTER);
 		
-		monthYearBtnPane.add(preMonthBtn);
-		monthYearBtnPane.add(monthYearLabel);
-		monthYearBtnPane.add(nextMonthBtn);	
+		monthYearBtnPane.add(preMonthBtn, BorderLayout.WEST);
+		monthYearBtnPane.add(monthYearLabel, BorderLayout.CENTER);
+		monthYearBtnPane.add(nextMonthBtn, BorderLayout.EAST);	
 	}
 	//---------------------------------------calendarPane-----------------------------------------------------------------
 
@@ -235,6 +280,16 @@ public class CalendarPage extends JFrame{
 
 	        int firstDayOfWeek = calendarCopy.get(Calendar.DAY_OF_WEEK);
 	        int daysInMonth = calendarCopy.getActualMaximum(Calendar.DAY_OF_MONTH);
+	        
+	        for(int i=0; i<7; i++) {
+	        	JLabel weekSt = new JLabel();
+	        	weekSt.setText(DateArray.weekString[i]);
+	        	weekSt.setBackground(orangeCol);
+	        	weekSt.setOpaque(true);
+	        	weekSt.setHorizontalAlignment(JLabel.CENTER);
+	        	calendarPane.add(weekSt);
+	        }
+
 
 	        for (int i = 1; i < firstDayOfWeek; i++) {
 	            calendarPane.add(new JLabel(""));
@@ -250,8 +305,14 @@ public class CalendarPage extends JFrame{
 		        	Image img2 = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		        	
 		        	
-		            JButton dayButton = new JButton(new ImageIcon(img2));
-		            dayButton.setBackground(Color.white);
+//		            JButton dayButton = new JButton(new ImageIcon(img2));
+		            JButton dayButton = new JButton();
+		            dayButton.setText("	 "+day);
+		            dayButton.setForeground(orangeCol);
+		            dayButton.setFont(new Font("한컴 고딕", Font.BOLD, 20));
+		            dayButton.setHorizontalAlignment(SwingConstants.LEFT);
+		            dayButton.setVerticalAlignment(SwingConstants.TOP);
+		            dayButton.setBackground(beigeColOp);
 		            dayButton.setBorder(new EmptyBorder(0,0,0,0));
 		            int finalDay = day;
 		            dayButton.addActionListener(new ActionListener() {
@@ -274,7 +335,7 @@ public class CalendarPage extends JFrame{
 	private JPanel getUnderBar() {
 		if(underBar==null) {
 			underBar = new JPanel();
-			underBar.setPreferredSize(new Dimension(1800, 80));
+			underBar.setPreferredSize(new Dimension((int)(this.getWidth()*0.9), (int)this.getHeight()/15));
 		}
 		return underBar;
 	}
@@ -284,28 +345,17 @@ public class CalendarPage extends JFrame{
 		if(boardTabPane==null) {
 			boardTabPane = new JPanel(new BorderLayout());
 			boardTabPane.setBackground(Color.white);
-			boardTabPane.add(getPNorth(),BorderLayout.NORTH);
+			boardTabPane.add(getBoardLabel(),BorderLayout.NORTH);
 			boardTabPane.add(getPCenter(),BorderLayout.CENTER);
 			
 		}
 		return boardTabPane;
 	}
 	
-	public JPanel getPNorth() {
-		if(pNorth == null) {
-			pNorth = new JPanel();
-			pNorth.add(getBoardLabel());
-			pNorth.add(Box.createHorizontalGlue());
-			pNorth.setBackground(beigeCol);
-		}
-		return pNorth;
-	}
 	
 	private JLabel getBoardLabel() {
 		if(boardLabel == null) {
-			boardLabel = new JLabel("라벨");
-			boardLabel.setHorizontalAlignment(JLabel.CENTER);
-			boardLabel.setPreferredSize(new Dimension(500, 100));
+			boardLabel = new JLabel(new ImageIcon(mainTop2));
 			
 		}
 		return boardLabel;
@@ -319,7 +369,6 @@ public class CalendarPage extends JFrame{
 			JScrollPane centerScrollPane = new JScrollPane(getBoardTable());
 			centerScrollPane.setBorder(null);
 			pCenter.add(centerScrollPane,BorderLayout.CENTER);
-//			pCenter.setBorder(BorderFactory.createEmptyBorder(200, 200, 50, 200));
 			pCenter.setBackground(Color.WHITE);
 			
 		}
@@ -330,17 +379,44 @@ public class CalendarPage extends JFrame{
 	private JPanel getPanel() {
 		if(panel == null) {
 			panel = new JPanel();
-			panel.setLayout(null);
+			panel.setLayout(new BorderLayout());
 			panel.setBackground(Color.WHITE);
-			panel.setPreferredSize(new Dimension(1100,200));
-			RoundedButton button = new RoundedButton();
-			button.setText("추가");
-			button.setBounds(1850, 150, 100, 40);
-			panel.add(button);
+//			panel.setPreferredSize(new Dimension(1100,200));
+			panel.setPreferredSize(new Dimension((int)(this.getWidth()*0.55),(int)(this.getHeight()/6)));
+			
+			Image imgTopbtn = createBtnImage.getImage();
+			int btnSize = (int) (this.getWidth()*0.06);
+			Image imgTop2btn = imgTopbtn.getScaledInstance(btnSize, btnSize, Image.SCALE_SMOOTH);
+			
+			JButton button = new JButton(new ImageIcon(imgTop2btn));
+			
+			button.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					new PostDialog(CalendarPage.this.board, email).setVisible(true);
+
+				}
+			});
+			button.setBackground(Color.white);
+			button.setBorder(new EmptyBorder(0,0,0,0));
+//			button.setText("추가");
+//			button.setPreferredSize(new Dimension((int)(this.getWidth()*0.05),(int)(this.getHeight()*0.01)));
+//			button.setBounds(1850, 150, 100, 40);
+//			button.setBounds(this.getWidth()*185/200, this.getHeight()*15/120, this.getWidth()/12, this.getHeight()/30);
+			
 			JLabel label = new JLabel();
-			label.setIcon(new ImageIcon(getClass().getResource("picture.png")));
-			label.setBounds(475, 25, 1000, 150);
-			panel.add(label);
+			Image imgTop = new ImageIcon(getClass().getResource("picture.png")).getImage();
+			int imgWidth = (int) (this.getWidth()*0.8);
+			int imgHeight = (int) (this.getHeight()*0.2);
+			Image imgTop2 = imgTop.getScaledInstance(imgWidth, imgHeight, Image.SCALE_SMOOTH);
+			
+			label.setIcon(new ImageIcon(imgTop2));
+			label.setHorizontalAlignment(JLabel.CENTER);
+//			label.setBounds(this.getWidth()*475/2000, this.getHeight()*25/1200, this.getWidth()/2, this.getHeight()*15/120);
+			
+			panel.add(label, BorderLayout.CENTER);
+			panel.add(button, BorderLayout.EAST);
 		}
 		return panel;
 	}
@@ -361,16 +437,16 @@ public class CalendarPage extends JFrame{
 			tableModel.addColumn("조회수");
 			refreshBoard();
 			jTable = new JTable(tableModel);
-			jTable.getColumn("번호").setPreferredWidth(100);
-			jTable.getColumn("제목").setPreferredWidth(450);
-			jTable.getColumn("내용").setPreferredWidth(450);
-			jTable.getColumn("날짜").setPreferredWidth(450);
-			jTable.getColumn("글쓴이").setPreferredWidth(450);
-			jTable.getColumn("조회수").setPreferredWidth(100);
+			jTable.getColumn("번호").setPreferredWidth(this.getWidth()/4);
+			jTable.getColumn("제목").setPreferredWidth(this.getWidth()*150/200);
+			jTable.getColumn("내용").setPreferredWidth(this.getWidth()*300/200);
+			jTable.getColumn("날짜").setPreferredWidth(this.getWidth()*80/200);
+			jTable.getColumn("글쓴이").setPreferredWidth(this.getWidth()*80/200);
+			jTable.getColumn("조회수").setPreferredWidth(this.getWidth()/4);
+			
 			jTable.setFillsViewportHeight(true);
 			
-			
-			jTable.setRowHeight(50);
+			jTable.setRowHeight(this.getWidth()/24);
 			jTable.getTableHeader().setReorderingAllowed(false);
 			jTable.setDefaultRenderer(Object.class, new EvenOddRenderer());
 			jTable.setDragEnabled(false);
@@ -380,7 +456,7 @@ public class CalendarPage extends JFrame{
 
 			header.setBackground(new Color(243, 232, 214));
 			header.setForeground(new Color(165, 165, 165));
-			header.setPreferredSize(new Dimension(header.getPreferredSize().width, 50));
+			header.setPreferredSize(new Dimension(header.getPreferredSize().width, this.getHeight()/24));
 
 			TableColumnModel columnModel = jTable.getColumnModel();
 			for (int i = 0; i < columnModel.getColumnCount(); i++) {
@@ -395,7 +471,6 @@ public class CalendarPage extends JFrame{
 					int rowIndex = jTable.getSelectedRow();
 					if (rowIndex != -1) {
 						int boardNo = (int) jTable.getValueAt(rowIndex, 0);
-						System.out.println("캘린더에서 이메일"+email);
 						CommentDialog commentDialog = new CommentDialog(board, boardNo, email);
 						commentDialog.setVisible(true);
 						refreshBoard();
