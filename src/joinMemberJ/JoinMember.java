@@ -1,4 +1,4 @@
-package JoinMemberJ;
+package joinMemberJ;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -31,7 +31,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import LoginViewJ.Login;
+import loginViewJ.Login;
 import model.UserDAO;
 import model.UserDTO;
 
@@ -74,8 +74,8 @@ public class JoinMember extends JFrame implements FocusListener{
 	public JLabel getLogo() {
 		if(logo == null) {
 			logo = new JLabel();
-			logo.setPreferredSize(new Dimension(100,120));
-			logo.setIcon(new ImageIcon(getClass().getResource("logo.jpg")));
+			logo.setPreferredSize(new Dimension(120,120));
+			logo.setIcon(new ImageIcon(getClass().getResource("logo.png")));
 			logo.setBorder(new EmptyBorder(20,10,10,10));
 			logo.setAlignmentX(JLabel.CENTER);
 			logo.setHorizontalAlignment(JLabel.CENTER);

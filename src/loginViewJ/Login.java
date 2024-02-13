@@ -1,4 +1,4 @@
-package LoginViewJ;
+package loginViewJ;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -29,8 +29,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import JoinMemberJ.JoinMember;
 import calendarview.CalendarPage;
+import joinMemberJ.JoinMember;
 import model.UserDAO;
 
 public class Login extends JFrame implements FocusListener{
@@ -104,6 +104,7 @@ public class Login extends JFrame implements FocusListener{
 			txtEmail.setPreferredSize(new Dimension(200,30));
 			txtEmail.setBorder(new LineBorder(new Color(243,232,214), 3));
 			txtEmail.addFocusListener(this);
+			txtEmail.addActionListener(getAction());
 //			txtEmail.setBackground(new Color(204,204,255));
 			email.add(txtEmail, BorderLayout.CENTER);
 		}
@@ -127,6 +128,7 @@ public class Login extends JFrame implements FocusListener{
 			txtPassword.setPreferredSize(new Dimension(200,30));
 			txtPassword.setBorder(new LineBorder(new Color(243,232,214), 3));
 			txtPassword.addFocusListener(this);
+			txtPassword.addActionListener(getAction());;
 //			txtPassword.setBackground(new Color(204,204,255));
 			password.add(txtPassword, BorderLayout.CENTER);
 		}
@@ -151,24 +153,7 @@ public class Login extends JFrame implements FocusListener{
 			btnLogin = new RoundedButton();
 			btnLogin.setPreferredSize(new Dimension(250,35));
 			btnLogin.setText("로그인");
-			btnLogin.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if(UserDAO.getInstance().getUserEmail(txtEmail.getText()).equals("")) {
-						JOptionPane.showMessageDialog(null, "존재하지 않는 email입니다. 다시 입력해주세요.","확인",JOptionPane.PLAIN_MESSAGE);
-						txtEmail.requestFocus();
-					}else if(!UserDAO.getInstance().getUserPassword(txtEmail.getText()).equals(txtPassword.getText())) {
-						JOptionPane.showMessageDialog(null, "비밀번호가 일치하지 않습니다. 다시 입력해주세요.","확인",JOptionPane.PLAIN_MESSAGE);
-						txtPassword.requestFocus();
-					}else {
-						String emailCp = txtEmail.getText();
-						String nicknameCp = UserDAO.getInstance().getUserNickName(emailCp);
-						CalendarPage cp = new CalendarPage(emailCp, nicknameCp);
-						dispose();
-						cp.setVisible(true);
-					}
-				}
-			});
+			btnLogin.addActionListener(getAction());
 		}
 		return btnLogin;
 	}
@@ -181,6 +166,28 @@ public class Login extends JFrame implements FocusListener{
 			btnGather.add(getBtnPasswordSearch());
 		}
 		return btnGather;
+	}
+	
+	public ActionListener getAction() {
+		ActionListener action = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(UserDAO.getInstance().getUserEmail(txtEmail.getText()).equals("")) {
+					JOptionPane.showMessageDialog(null, "존재하지 않는 email입니다. 다시 입력해주세요.","확인",JOptionPane.PLAIN_MESSAGE);
+					txtEmail.requestFocus();
+				}else if(!UserDAO.getInstance().getUserPassword(txtEmail.getText()).equals(txtPassword.getText())) {
+					JOptionPane.showMessageDialog(null, "비밀번호가 일치하지 않습니다. 다시 입력해주세요.","확인",JOptionPane.PLAIN_MESSAGE);
+					txtPassword.requestFocus();
+				}else {
+					String emailCp = txtEmail.getText();
+					String nicknameCp = UserDAO.getInstance().getUserNickName(emailCp);
+					CalendarPage cp = new CalendarPage(emailCp, nicknameCp);
+					dispose();
+					cp.setVisible(true);
+				}
+			}
+		};
+		return action;
 	}
 	
 	public JButton getBtnJoinMember() {

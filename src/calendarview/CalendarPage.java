@@ -45,6 +45,8 @@ import javax.swing.table.TableColumnModel;
 
 import model.BoardsDAO;
 import model.BoardsDTO;
+import model.CommentsDAO;
+import model.CommentsDTO;
 import widgetMode.WidgetMode;
 
 public class CalendarPage extends JFrame{
@@ -435,6 +437,7 @@ public class CalendarPage extends JFrame{
 			tableModel.addColumn("날짜");
 			tableModel.addColumn("글쓴이");
 			tableModel.addColumn("조회수");
+			tableModel.addColumn("BN");
 			refreshBoard();
 			jTable = new JTable(tableModel);
 			jTable.getColumn("번호").setPreferredWidth(this.getWidth()/4);
@@ -443,7 +446,9 @@ public class CalendarPage extends JFrame{
 			jTable.getColumn("날짜").setPreferredWidth(this.getWidth()*80/200);
 			jTable.getColumn("글쓴이").setPreferredWidth(this.getWidth()*80/200);
 			jTable.getColumn("조회수").setPreferredWidth(this.getWidth()/4);
-			
+			jTable.getColumn("BN").setMinWidth(0);
+			jTable.getColumn("BN").setMaxWidth(0);
+			jTable.getColumn("BN").setPreferredWidth(0);
 			jTable.setFillsViewportHeight(true);
 			
 			jTable.setRowHeight(this.getWidth()/24);
@@ -470,7 +475,7 @@ public class CalendarPage extends JFrame{
 
 					int rowIndex = jTable.getSelectedRow();
 					if (rowIndex != -1) {
-						int boardNo = (int) jTable.getValueAt(rowIndex, 0);
+						int boardNo = (int) jTable.getValueAt(rowIndex,6);
 						CommentDialog commentDialog = new CommentDialog(board, boardNo, email);
 						commentDialog.setVisible(true);
 						refreshBoard();
@@ -515,11 +520,17 @@ public class CalendarPage extends JFrame{
 	public void refreshBoard() {
 		DefaultTableModel tableModel = (DefaultTableModel) jTable.getModel();
 		tableModel.setNumRows(0);
-		for (BoardsDTO dto : BoardsDAO.getInstance().getBoards()) {
-			Object[] rowData = { dto.getBoardNo(), dto.getTitle(), dto.getBoardContent(), dto.getBoardDate(),
-					dto.getEmail(), dto.getHitcount() };
-			tableModel.addRow(rowData);
-		}
+		List<BoardsDTO> dto = BoardsDAO.getInstance().getBoards();
+		for(int i=0; i<dto.size();i++) {
+			Object[] rowData = {i+1, dto.get(i).getTitle(), dto.get(i).getBoardContent(), dto.get(i).getBoardDate(),
+					dto.get(i).getEmail(), dto.get(i).getHitcount(), dto.get(i).getBoardNo()};
+			tableModel.addRow(rowData);}
+		
+//	for (BoardsDTO dto : BoardsDAO.getInstance().getBoards()) {
+//	Object[] rowData = { dto.getBoardNo(), dto.getTitle(), dto.getBoardContent(), dto.getBoardDate(),
+//			dto.getEmail(), dto.getHitcount() };
+//	tableModel.addRow(rowData);
+//}
 	}//새로고침
 	
 	
