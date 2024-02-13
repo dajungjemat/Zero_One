@@ -152,6 +152,7 @@ public class CalendarPage extends JFrame{
 			tabPane.setTabPlacement(JTabbedPane.TOP);
 			tabPane.addTab("calendar", getCalendarTabPane());
 			tabPane.addTab("board", getBoardTabPane());
+			
 			tabPane.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent e) {
 					CalendarPage.this.calendarTabPane.removeAll();
@@ -201,14 +202,14 @@ public class CalendarPage extends JFrame{
 	private void updateMonthYear() {
 		
 		Image mainTop = new ImageIcon(CalendarPage.class.getResource("mainTopBackImage.png")).getImage();
-		mainTop2 = mainTop.getScaledInstance(this.getWidth(), (int)(this.getHeight()*0.056), Image.SCALE_SMOOTH);
+		mainTop2 = mainTop.getScaledInstance(this.getWidth(), (int)(this.getHeight()*0.056), Image.SCALE_FAST);
 		monthYearBtnPane.add(new JLabel(new ImageIcon(mainTop2)), BorderLayout.NORTH);
 		int width = (int)(this.getWidth()*0.025);
 		int height = (int)(this.getHeight()*0.07);
 		Image rightBtnImage = new ImageIcon(CalendarPage.class.getResource("right.png")).getImage();
-		Image rightImage = rightBtnImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		Image rightImage = rightBtnImage.getScaledInstance(width, height, Image.SCALE_FAST);
 		Image leftBtnImage = new ImageIcon(CalendarPage.class.getResource("left.png")).getImage();
-		Image leftImage	= leftBtnImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		Image leftImage	= leftBtnImage.getScaledInstance(width, height, Image.SCALE_FAST);
 		
 		preMonthBtn = new JButton(new ImageIcon(leftImage));
 		preMonthBtn.setBorder(new EmptyBorder(0,0,0,0));
@@ -308,15 +309,6 @@ public class CalendarPage extends JFrame{
 	        try {
 		        for (int day = 1; day <= daysInMonth; day++) {
 		  	      
-		        	ImageIcon calendarBtnImage = new ImageIcon(CalendarPage.class.getResource("calendar"+day+".png"));
-		        	Image img = calendarBtnImage.getImage();
-		        	
-		        	int width = (int)(this.getWidth()*0.12);
-		        	int height = (int)(this.getHeight()*0.1);
-		        	Image img2 = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-		        	
-		        	
-//		            JButton dayButton = new JButton(new ImageIcon(img2));
 		            JButton dayButton = new JButton();
 		            dayButton.setText("	 "+day);
 		            dayButton.setForeground(orangeCol);
@@ -397,7 +389,7 @@ public class CalendarPage extends JFrame{
 			
 			Image imgTopbtn = createBtnImage.getImage();
 			int btnSize = (int) (this.getWidth()*0.06);
-			Image imgTop2btn = imgTopbtn.getScaledInstance(btnSize, btnSize, Image.SCALE_SMOOTH);
+			Image imgTop2btn = imgTopbtn.getScaledInstance(btnSize, btnSize, Image.SCALE_FAST);
 			
 			JButton button = new JButton(new ImageIcon(imgTop2btn));
 			
@@ -420,7 +412,7 @@ public class CalendarPage extends JFrame{
 			Image imgTop = new ImageIcon(getClass().getResource("picture.png")).getImage();
 			int imgWidth = (int) (this.getWidth()*0.8);
 			int imgHeight = (int) (this.getHeight()*0.2);
-			Image imgTop2 = imgTop.getScaledInstance(imgWidth, imgHeight, Image.SCALE_SMOOTH);
+			Image imgTop2 = imgTop.getScaledInstance(imgWidth, imgHeight, Image.SCALE_FAST);
 			
 			label.setIcon(new ImageIcon(imgTop2));
 			label.setHorizontalAlignment(JLabel.CENTER);

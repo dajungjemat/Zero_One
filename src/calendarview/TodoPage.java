@@ -33,6 +33,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.tools.Tool;
 
 import model.ContentsDAO;
@@ -74,6 +76,7 @@ public class TodoPage extends JFrame{
 	ImageIcon todoTopImage = new ImageIcon(TodoPage.class.getResource("todoTopImage.png"));
 	Image imgTopBack2;
 	
+	
 	public TodoPage(Date date,String email) {
 		this.todoPage = this;
 		this.date = date;
@@ -92,17 +95,27 @@ public class TodoPage extends JFrame{
 	
 	public JTabbedPane getTabPane() {
 		if(tabPane==null) {
-			System.out.println("실행1");
 			tabPane = new JTabbedPane();
 			tabPane.addTab("To_Do List", getTodoPane());
 			tabPane.addTab("Memo", getMemoPane());
 			tabPane.addTab("Diary", getDiaryPane());
 			tabPane.setBackground(beigeColOp);
+			tabPane.addChangeListener(new ChangeListener() {
+				
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					memoPane.setVisible(true);
+					diaryPane.setVisible(true);
+					
+					
+				}
+			});
 
 		}
 		return tabPane;
 	}
 	
+
 	public JPanel getTodoPane() {
 		if(todoPane==null) {
 			todoPane = new JPanel();
@@ -116,7 +129,7 @@ public class TodoPage extends JFrame{
 			Image imgTopBack = topBackBarImage.getImage();
 			int imgWidthBack = (int) (this.getWidth()*0.9);
 			int imgHeightBack = (int) (this.getHeight()*0.1);
-			imgTopBack2 = imgTopBack.getScaledInstance(imgWidthBack, imgHeightBack, Image.SCALE_SMOOTH);
+			imgTopBack2 = imgTopBack.getScaledInstance(imgWidthBack, imgHeightBack, Image.SCALE_FAST);
 			
 			JPanel marginPane = new JPanel(){
 	            public void paintComponent(Graphics g) {
@@ -128,7 +141,7 @@ public class TodoPage extends JFrame{
 			Image imgTop = todoTopImage.getImage();
 			int imgWidth = (int) (this.getWidth()*0.25);
 			int imgHeight = (int) (this.getHeight()*0.09);
-			Image imgTop2 = imgTop.getScaledInstance(imgWidth, imgHeight, Image.SCALE_SMOOTH);
+			Image imgTop2 = imgTop.getScaledInstance(imgWidth, imgHeight, Image.SCALE_FAST);
 			
 			JPanel centerPane = new JPanel(){
 	            public void paintComponent(Graphics g) {
@@ -141,7 +154,7 @@ public class TodoPage extends JFrame{
 			
 			Image img = createBtnImage.getImage();
 			int btnSize = (int) (this.getWidth()*0.09);
-			Image img2 = img.getScaledInstance(btnSize, btnSize, Image.SCALE_SMOOTH);
+			Image img2 = img.getScaledInstance(btnSize, btnSize, Image.SCALE_FAST);
 			
 			JButton createContentBtn = new JButton(new ImageIcon(img2));
 			createContentBtn.setBackground(Color.white);
@@ -275,7 +288,7 @@ public class TodoPage extends JFrame{
 
 		Image img = doneBtnImage.getImage();
 		int btnSize = (int) (this.getWidth()*0.09);
-		Image img2 = img.getScaledInstance(btnSize, btnSize, Image.SCALE_SMOOTH);
+		Image img2 = img.getScaledInstance(btnSize, btnSize, Image.SCALE_FAST);
 		
 		JButton downBtn = new JButton(new ImageIcon(img2));
 		downBtn.setBackground(Color.white);
@@ -303,7 +316,7 @@ public class TodoPage extends JFrame{
 		
 		Image img = againBtnImage.getImage();
 		int btnSize = (int) (this.getWidth()*0.09);
-		Image img2 = img.getScaledInstance(btnSize, btnSize, Image.SCALE_SMOOTH);
+		Image img2 = img.getScaledInstance(btnSize, btnSize, Image.SCALE_FAST);
 		
 		JButton upBtn = new JButton(new ImageIcon(img2));
 		upBtn.setBackground(Color.white);
@@ -333,7 +346,7 @@ public class TodoPage extends JFrame{
 		
 		Image img = deleteBtnImage.getImage();
 		int btnSize = (int) (this.getWidth()*0.09);
-		Image img2 = img.getScaledInstance(btnSize, btnSize, Image.SCALE_SMOOTH);
+		Image img2 = img.getScaledInstance(btnSize, btnSize, Image.SCALE_FAST);
 		
 		JButton deleteBtn = new JButton(new ImageIcon(img2));
 		deleteBtn.setBackground(Color.white);
@@ -391,7 +404,7 @@ public class TodoPage extends JFrame{
 	        Image imgTop = memoTopImage.getImage();
 	    	int imgWidth = (int) (this.getWidth()*0.25);
 	    	int imgHeight = (int) (this.getHeight()*0.09);
-	    	Image imgTop2 = imgTop.getScaledInstance(imgWidth, imgHeight, Image.SCALE_SMOOTH);	 
+	    	Image imgTop2 = imgTop.getScaledInstance(imgWidth, imgHeight, Image.SCALE_FAST);	 
 	    	
 			JPanel centerPane = new JPanel(){
 	            public void paintComponent(Graphics g) {
@@ -490,7 +503,7 @@ public class TodoPage extends JFrame{
 	        Image imgTop = diaryTopImage.getImage();
 	    	int imgWidth = (int) (this.getWidth()*0.25);
 	    	int imgHeight = (int) (this.getHeight()*0.09);
-	    	Image imgTop2 = imgTop.getScaledInstance(imgWidth, imgHeight, Image.SCALE_SMOOTH);	
+	    	Image imgTop2 = imgTop.getScaledInstance(imgWidth, imgHeight, Image.SCALE_FAST);	
 	    			
 			JPanel centerPane = new JPanel(){
 	            public void paintComponent(Graphics g) {

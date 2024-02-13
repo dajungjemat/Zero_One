@@ -75,7 +75,7 @@ public class TodoCreatePage extends JFrame{
 		Image imgTop = topBackImage.getImage();
 	    int imgWidth = (int) (this.getWidth());
 	    int imgHeight = (int) (this.getHeight()*0.22);
-	    Image imgTop2 = imgTop.getScaledInstance(imgWidth, imgHeight, Image.SCALE_SMOOTH);
+	    Image imgTop2 = imgTop.getScaledInstance(imgWidth, imgHeight, Image.SCALE_FAST);
 	    
 	    JLabel marginLabel = new JLabel();
 	    marginLabel.setIcon(new ImageIcon(imgTop2));
@@ -301,7 +301,7 @@ public class TodoCreatePage extends JFrame{
 			
 			Image imgTop = saveBtnImage.getImage();
 			int btnSize = (int) (this.getHeight()*0.2);
-			Image imgTop2 = imgTop.getScaledInstance(btnSize, btnSize, Image.SCALE_SMOOTH);
+			Image imgTop2 = imgTop.getScaledInstance(btnSize, btnSize, Image.SCALE_FAST);
 			
 			JButton contentInsertButton = new JButton(new ImageIcon(imgTop2));
 			contentInsertButton.setBorder(new EmptyBorder(0,0,0,0));

@@ -1,6 +1,6 @@
 package joinMemberJ;
 
-import java.awt.BorderLayout;
+import java.awt.BorderLayout; 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -31,7 +31,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import loginViewJ.Login;
+import loginViewJ.*;
 import model.UserDAO;
 import model.UserDTO;
 
