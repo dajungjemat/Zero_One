@@ -1,6 +1,6 @@
 package calendarview;
 
-import java.awt.BorderLayout;
+import java.awt.BorderLayout; 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -45,8 +45,8 @@ import javax.swing.table.TableColumnModel;
 
 import model.BoardsDAO;
 import model.BoardsDTO;
-import widgetMode.WidgetMode;
-
+import widgetMode.*;
+ 
 public class CalendarPage extends JFrame{
 	// 공통 변수
 	private JTabbedPane tabPane;
