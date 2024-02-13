@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -25,7 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -37,6 +35,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -45,8 +45,6 @@ import javax.swing.table.TableColumnModel;
 
 import model.BoardsDAO;
 import model.BoardsDTO;
-import model.CommentsDAO;
-import model.CommentsDTO;
 import widgetMode.WidgetMode;
 
 public class CalendarPage extends JFrame{
@@ -154,7 +152,17 @@ public class CalendarPage extends JFrame{
 			tabPane.setTabPlacement(JTabbedPane.TOP);
 			tabPane.addTab("calendar", getCalendarTabPane());
 			tabPane.addTab("board", getBoardTabPane());
-			
+			tabPane.addChangeListener(new ChangeListener() {
+				public void stateChanged(ChangeEvent e) {
+					CalendarPage.this.calendarTabPane.removeAll();
+					CalendarPage.this.tabPane.revalidate();
+					calendarTabPane.setBackground(Color.white);
+					calendarTabPane.setLayout(new BorderLayout(10,20));
+					calendarTabPane.add(getMonthYearBtnPane(),BorderLayout.NORTH);
+					calendarTabPane.add(getCalendarPane(), BorderLayout.CENTER);
+					
+				}
+			});
 		}
 		return tabPane;
 	}
@@ -178,6 +186,7 @@ public class CalendarPage extends JFrame{
 	private JPanel getMonthYearBtnPane() {
 		if(monthYearBtnPane==null) {
 			monthYearBtnPane = new JPanel();
+			monthYearBtnPane.setBackground(Color.white);
 			monthYearBtnPane.setLayout(new BorderLayout());
 			
 			updateMonthYear();	

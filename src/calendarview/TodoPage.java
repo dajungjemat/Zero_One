@@ -78,6 +78,7 @@ public class TodoPage extends JFrame{
 		this.todoPage = this;
 		this.date = date;
 		this.email = email;
+		this.setResizable(false);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int x = (int)((int) screenSize.getWidth()*0.4 );
 		int y = (int)((int) screenSize.getHeight()*0.75);

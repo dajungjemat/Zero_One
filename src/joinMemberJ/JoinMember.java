@@ -45,7 +45,7 @@ public class JoinMember extends JFrame implements FocusListener{
 	private RoundedButton btnDoubleCheck, btnNumSend, btnNewMember;
 	private JButton btnLogin;
 	StringBuilder stringBuilder = new StringBuilder();
-	boolean emailBoolean;
+	boolean emailBoolean, passwordBoolean;
 	
 	public JoinMember() {
 		this.board = this;
@@ -328,6 +328,7 @@ public class JoinMember extends JFrame implements FocusListener{
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					emailBoolean = Pattern.matches("\\w+@\\w+\\.\\w+(\\.\\w+)?", txtEmail.getText());
+					passwordBoolean = Pattern.matches("\\w+", txtPassword.getText());
 					if(txtNickname.getText().equals("")) {
 						JOptionPane.showMessageDialog(null, "닉네임을 입력해주세요.","확인",JOptionPane.PLAIN_MESSAGE);
 						txtNickname.requestFocus();
@@ -345,6 +346,9 @@ public class JoinMember extends JFrame implements FocusListener{
 						txtEmailCheck.requestFocus();
 					}else if(txtPassword.getText().equals("")){
 						JOptionPane.showMessageDialog(null, "비밀번호를 입력해주세요.","확인",JOptionPane.PLAIN_MESSAGE);
+						txtPassword.requestFocus();
+					}else if(passwordBoolean==false) {
+						JOptionPane.showMessageDialog(null, "잘못된 비밀번호 형식입니다. 뛰어쓰기나 특수문자가 있는지 확인해주세요","확인",JOptionPane.PLAIN_MESSAGE);
 						txtPassword.requestFocus();
 					}else if(!txtPassword.getText().equals(txtPasswordCheck.getText())) {
 						JOptionPane.showMessageDialog(null, "비밀번호가 다릅니다 확인해주세요.","확인",JOptionPane.PLAIN_MESSAGE);
